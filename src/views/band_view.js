@@ -1,4 +1,4 @@
-export class HomeView {
+export class BandView {
   constructor(container, data) {
     this.container = container;
     this.data = data;
@@ -6,6 +6,7 @@ export class HomeView {
 
   render() {
     //D3 rendering
+    z;
     //D3 rendering view specific
   }
 

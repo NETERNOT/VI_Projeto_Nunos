@@ -8,5 +8,9 @@ const { data: csvData } = Papa.parse(csvRaw, {
   dynamicTyping: true,
 });
 
+const limit = 100;
+csvData = csvData.slice(0, 100);
+
+
 module.exports = csvData;
 // console.log(csvData)

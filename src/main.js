@@ -4,16 +4,30 @@ import { GenreView } from "./views/genre_view.js";
 
 class ViewController {
   constructor() {
+    //initialize variables as null to get the content later
     this.currentView = null;
     this.data = null;
-    this.container = "#main-container";
+    this.container = null;
   }
 
+  //function to get the container for the view
+  init() {
+    this.container = document.getElementById("main-container");
+    if (!this.container) {
+      console.error("main-container element not found");
+      return false;
+    }
+    return true;
+  }
+
+  //function to load the csv data and log if it catches it
   async loadData() {
     //load data CSV
     this.data = await d3.csv("./public/db/metal_bands_2017_v2.csv");
+    console.log("Data loaded:", this.data.length, "records");
   }
 
+  //function to render and switch between views
   showView(viewName) {
     //destroy current view
     if (this.currentView) {
@@ -33,13 +47,34 @@ class ViewController {
         break;
     }
 
-    this.currentView.render(); //render the current view
+    if (this.currentView) {
+      this.currentView.render(); //render the current view
+      console.log("View rendered:", viewName);
+    } else {
+      console.error("Failed to create view:", viewName);
+    }
   }
 }
 
-const viewController = new ViewController();
-viewController.loadData().then(() => {
-  viewController.showView("home_view"); //show default view
+const viewController = new ViewController(); //initialize the view controller as a variable
+
+//wait for DOM to be ready
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM loaded, initializing...");
+
+  //if there is no container, log error
+  if (!viewController.init()) {
+    console.error("Failed to initialize view controller");
+    return;
+  }
+
+  //await the data and show the view, if there is no data, log error
+  try {
+    await viewController.loadData();
+    viewController.showView("home_view");
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
 });
 
 window.viewController = viewController;

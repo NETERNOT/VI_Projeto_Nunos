@@ -6,7 +6,6 @@ export class GenreView {
 
   render() {
     //D3 rendering
-    z;
     //D3 rendering view specific
   }
 

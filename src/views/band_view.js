@@ -6,7 +6,6 @@ export class BandView {
 
   render() {
     //D3 rendering
-    z;
     //D3 rendering view specific
   }
 

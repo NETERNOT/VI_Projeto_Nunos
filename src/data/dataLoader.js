@@ -11,7 +11,7 @@ export async function loadCsvData() {
     el.style = el.style.replace(/^"|"$/g, '').split(',').map(s => s.trim());
   })
 
-  console.log(data);
+  //console.log(data);
   const limit = 100;
   const limitedData = data.slice(0, limit);
 

@@ -14,9 +14,28 @@ export class HomeView {
         }
       });
       return list;
-    }, [] );
+    }, []);
     console.log(Genres);
+    Genres.forEach((genre) => {
+      const svg = d3
+        .select(this.container)
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200)
+        .attr("fill", "#ccc");
 
+      svg.append("circle").attr("cx", 100).attr("cy", 120).attr("r", 60);
+
+      // Add text above the circle
+      svg
+        .append("text")
+        .attr("x", 100)
+        .attr("y", 125) // Positioned above the circle
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12pt")
+        .attr("fill", "#000")
+        .text(genre);
+    });
     //D3 rendering view specific
   }
 

@@ -20,7 +20,7 @@ export class HomeView {
 
 
     console.log(Genres);
-    Genres.forEach((genre) => {
+    Object.entries(Genres).forEach(([genre, fans]) => {
       const svg = d3
         .select(this.container)
         .append("svg")

@@ -26,6 +26,7 @@ class ViewController {
     //load data CSV
     this.data = loadCsvData();
     console.log("Data loaded:", this.data.length, "records");
+    console.log(this.data);
   }
 
   //function to render and switch between views

@@ -7,6 +7,11 @@ export async function loadCsvData() {
     dynamicTyping: true,
   });
 
+   data.map(el => { 
+    el.style = el.style.replace(/^"|"$/g, '').split(',').map(s => s.trim());
+  })
+
+  console.log(data);
   const limit = 100;
   const limitedData = data.slice(0, limit);
 

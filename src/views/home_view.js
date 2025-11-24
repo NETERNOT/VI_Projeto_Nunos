@@ -6,18 +6,17 @@ export class HomeView {
 
   render() {
     //D3 rendering
-    
+
     const Genres = this.data.reduce((list, el) => {
       el.style.forEach((genre) => {
         if (!list.hasOwnProperty(genre)) {
           list[genre] = el.fans;
-        } else{
+        } else {
           list[genre] += el.fans;
         }
       });
       return list;
-    }, {} );
-
+    }, {});
 
     console.log(Genres);
     Object.entries(Genres).forEach(([genre, fans]) => {
@@ -28,7 +27,18 @@ export class HomeView {
         .attr("height", 200)
         .attr("fill", "#ccc");
 
-      svg.append("circle").attr("cx", 100).attr("cy", 120).attr("r", 60);
+      const circle = svg
+        .append("circle")
+        .attr("cx", 100)
+        .attr("cy", 120)
+        .attr("r", 60)
+        .attr("fill", "#ccc")
+        .style("cursor", "pointer")
+        .on("click", function () {
+          const currentFill = d3.select(this).attr("fill");
+          const newFill = currentFill === "#ccc" ? "#f00" : "#ccc";
+          d3.select(this).attr("fill", newFill);
+        });
 
       // Add text above the circle
       svg

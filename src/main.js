@@ -1,6 +1,7 @@
 import { HomeView } from "./views/home_view.js";
 import { BandView } from "./views/band_view.js";
 import { GenreView } from "./views/genre_view.js";
+import { loadCsv } from "./data/dataLoader.js";
 
 class ViewController {
   constructor() {
@@ -23,7 +24,7 @@ class ViewController {
   //function to load the csv data and log if it catches it
   async loadData() {
     //load data CSV
-    this.data = await d3.csv("./public/db/metal_bands_2017_v2.csv");
+    this.data = await loadCsv();
     console.log("Data loaded:", this.data.length, "records");
   }
 

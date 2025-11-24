@@ -22,13 +22,22 @@ export class HomeView {
     const Genres = this.data.reduce((list, el) => {
       el.style.forEach((genre) => {
         if (!list.hasOwnProperty(genre)) {
-          list[genre] = el.fans;
+          list[genre] = {total: el.fans};
         } else {
-          list[genre] += el.fans;
+          list[genre].total += el.fans;
         }
       });
       return list;
     }, {});
+
+    for(let band of this.data){
+      for(let genre of band.style){
+        if(!Genres[genre].hasOwnProperty(band.origin)){
+          Genres[genre][band.origin] = 0
+        }
+        Genres[genre][band.origin] += band.fans;
+      }
+    }
 
     //create container with overflow scrolling
     const scrollContainer = d3
@@ -54,7 +63,7 @@ export class HomeView {
 
     Object.entries(Genres).forEach(([genre, fans]) => {
       const scaleFactor = 0.2;
-      const fansRadius = Math.max(20, Math.sqrt(fans * scaleFactor));
+      const fansRadius = Math.max(20, Math.sqrt(fans.total * scaleFactor));
 
       //find a non-overlapping position
       let position = this.findNonOverlappingPosition(

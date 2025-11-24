@@ -24,9 +24,8 @@ class ViewController {
   //function to load the csv data and log if it catches it
   async loadData() {
     //load data CSV
-    this.data = loadCsvData();
+    this.data = await loadCsvData();
     console.log("Data loaded:", this.data.length, "records");
-    console.log(this.data);
   }
 
   //function to render and switch between views

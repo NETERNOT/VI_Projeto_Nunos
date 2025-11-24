@@ -6,6 +6,17 @@ export class HomeView {
 
   render() {
     //D3 rendering
+    console.log("Ta a receber esta data", this.data);
+    const Genres = this.data.reduce((list, el) => {
+      el.style.forEach((genre) => {
+        if (!list.includes(genre)) {
+          list.push(genre);
+        }
+      });
+      return list;
+    }, [] );
+    console.log(Genres);
+
     //D3 rendering view specific
   }
 

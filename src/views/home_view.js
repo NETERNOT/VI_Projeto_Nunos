@@ -22,7 +22,7 @@ export class HomeView {
     const Genres = this.data.reduce((list, el) => {
       el.style.forEach((genre) => {
         if (!list.hasOwnProperty(genre)) {
-          list[genre] = {total: el.fans};
+          list[genre] = { total: el.fans };
         } else {
           list[genre].total += el.fans;
         }
@@ -30,10 +30,10 @@ export class HomeView {
       return list;
     }, {});
 
-    for(let band of this.data){
-      for(let genre of band.style){
-        if(!Genres[genre].hasOwnProperty(band.origin)){
-          Genres[genre][band.origin] = 0
+    for (let band of this.data) {
+      for (let genre of band.style) {
+        if (!Genres[genre].hasOwnProperty(band.origin)) {
+          Genres[genre][band.origin] = 0;
         }
         Genres[genre][band.origin] += band.fans;
       }
@@ -229,6 +229,7 @@ export class HomeView {
       this.zoomGroup
         .transition()
         .duration(300)
+        .attr("transform-origin", "center")
         .attr("transform", `scale(${this.zoomScale})`);
     }
   }

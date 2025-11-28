@@ -23,7 +23,7 @@ canvas {
 #main-container {
   width: 100vw;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
 }
 

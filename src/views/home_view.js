@@ -4,21 +4,19 @@ export class HomeView {
     this.data = data;
 
     this.zoomScale = 1; //initial zoom scale
-    this.minZoom = 0.5;
-    this.maxZoom = 3;
+    this.minZoom = 0.2;
+    this.maxZoom = 4;
     this.zoomStep = 0.2;
 
-    //canvas dimensions for overflow area
-    this.canvasWidth = this.container.offsetWidth;
-    this.canvasHeight = this.container.offsetHeight;
+    //canvas dimensions to use full window
+    this.canvasWidth = window.innerWidth;
+    this.canvasHeight = window.innerHeight;
   }
 
   render() {
     //D3 rendering
 
-    //setup zoom event listeners
-    this.setupZoomControls();
-
+    //list of genres with total fans and origin breakdown
     const Genres = this.data.reduce((list, el) => {
       el.style.forEach((genre) => {
         if (!list.hasOwnProperty(genre)) {
@@ -30,6 +28,7 @@ export class HomeView {
       return list;
     }, {});
 
+    //list of origins per genre with fans
     for (let band of this.data) {
       for (let genre of band.style) {
         if (!Genres[genre].hasOwnProperty(band.origin)) {
@@ -39,15 +38,9 @@ export class HomeView {
       }
     }
 
-    //create container with overflow scrolling
-    const scrollContainer = d3
+    //create main SVG container using full window dimensions
+    const mainSvg = d3
       .select(this.container)
-      .style("overflow", "auto")
-      .style("width", "100%")
-      .style("height", "100vh");
-
-    //create main container with larger canvas
-    const mainSvg = scrollContainer
       .append("svg")
       .attr("width", this.canvasWidth)
       .attr("height", this.canvasHeight)
@@ -56,187 +49,94 @@ export class HomeView {
     //create zoomable group
     this.zoomGroup = mainSvg.append("g").attr("class", "zoom-group");
 
-    console.log(Genres);
+    //store reference to this for use in zoom function
+    const self = this;
 
-    //array to store positioned circles for collision detection
-    const positionedCircles = [];
-
-    Object.entries(Genres).forEach(([genre, fans]) => {
-      const scaleFactor = 0.2;
-      const fansRadius = Math.max(20, Math.sqrt(fans.total * scaleFactor));
-
-      //find a non-overlapping position
-      let position = this.findNonOverlappingPosition(
-        positionedCircles,
-        fansRadius
-      );
-
-      //store this circle's position for future collision checks
-      positionedCircles.push({
-        x: position.x,
-        y: position.y,
-        radius: fansRadius + 10, //add 10px padding
-      });
-
-      const svg = this.zoomGroup
-        .append("g")
-        .attr("class", "genre-group")
-        .attr("transform", `translate(${position.x}, ${position.y})`);
-
-      const circle = svg
-        .append("circle")
-        .attr("cx", 0)
-        .attr("cy", 0)
-        .attr("r", fansRadius)
-        .attr("fill", "#ccc")
-        .style("cursor", "pointer")
-        .on("click", function () {
-          const currentFill = d3.select(this).attr("fill");
-          const newFill = currentFill === "#ccc" ? "#f00" : "#ccc";
-          d3.select(this).attr("fill", newFill);
-        });
-
-      svg
-        .append("text")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "central")
-        .attr("font-size", Math.max(8, fansRadius / 4))
-        .attr("fill", "#000")
-        .attr("pointer-events", "none")
-        .text(genre);
-    });
-
-    //apply initial zoom
-    this.applyZoom();
-    //D3 rendering view specific
-  }
-
-  //function to find a position that doesn't overlap with existing circles
-  findNonOverlappingPosition(existingCircles, radius) {
-    const maxAttempts = 100;
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
-      //generate random position within larger canvas bounds, keeping circles fully inside
-      const x = radius + Math.random() * (this.canvasWidth * 2.4);
-      const y = radius + Math.random() * (this.canvasHeight * 2.4);
-
-      //check if this position overlaps with any existing circle
-      let overlaps = false;
-      for (let existing of existingCircles) {
-        const distance = Math.sqrt(
-          Math.pow(x - existing.x, 2) + Math.pow(y - existing.y, 2)
-        );
-
-        if (distance < radius + existing.radius) {
-          overlaps = true;
-          break;
-        }
-      }
-
-      //if no overlap found, return this position
-      if (!overlaps) {
-        return { x, y };
-      }
-
-      attempts++;
+    function zoomed(event) {
+      const { transform } = event;
+      self.zoomGroup
+        .attr("transform", transform)
+        .attr("stroke-width", 5 / transform.k);
     }
 
-    //if we couldn't find a non-overlapping position after max attempts,
-    //use a grid-based fallback
-    const gridSize = Math.ceil(Math.sqrt(existingCircles.length + 1));
-    const cellWidth = this.canvasWidth / gridSize;
-    const cellHeight = this.canvasHeight / gridSize;
-    const row = Math.floor(existingCircles.length / gridSize);
-    const col = existingCircles.length % gridSize;
+    const zoom = d3
+      .zoom()
+      .scaleExtent([this.minZoom, this.maxZoom])
+      .on("zoom", zoomed);
 
-    return {
-      x: col * cellWidth + cellWidth / 2,
-      y: row * cellHeight + cellHeight / 2,
-    };
+    mainSvg.call(zoom);
+
+    //store zoom behavior for button controls
+    this.zoom = zoom;
+    this.mainSvg = mainSvg;
+
+    console.log(Genres);
+
+    //convert Genres object to array for D3 simulation
+    const nodes = Object.entries(Genres).map(([genre, fans]) => ({
+      id: genre,
+      genre: genre,
+      fans: fans.total,
+      radius: Math.max(14.5, Math.sqrt(fans.total * 0.145)),
+    }));
+
+    //create circles first
+    const circles = this.zoomGroup
+      .selectAll(".genre-group")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "genre-group");
+
+    circles
+      .append("circle")
+      .attr("r", (d) => d.radius)
+      .attr("fill", "#ccc")
+      .style("cursor", "pointer")
+      .on("click", function () {
+        const currentFill = d3.select(this).attr("fill");
+        const newFill = currentFill === "#ccc" ? "#f00" : "#ccc";
+        d3.select(this).attr("fill", newFill);
+      });
+
+    circles
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("font-size", (d) => d.radius / 6 + 1)
+      .attr("fill", "#000")
+      .attr("pointer-events", "none")
+      .text((d) => d.genre);
+
+    //set up force simulation
+    const simulation = d3
+      .forceSimulation(nodes)
+      .force("charge", d3.forceManyBody().strength(-8))
+      .force(
+        "collision",
+        d3.forceCollide().radius((d) => d.radius + 5)
+      )
+      .force(
+        "center",
+        d3.forceCenter(this.canvasWidth / 2, this.canvasHeight / 2)
+      );
+
+    //update positions on each tick
+    simulation.on("tick", () => {
+      circles.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+    });
+
+    //USAR O X E O Y DOS circles PARA O ALGORITMO DAS BANDAS ANDAR ENTRE ELES
+
+    //D3 rendering view specific
   }
 
   update(newData) {
     //update logic
   }
 
-  //setup zoom button event listeners
-  setupZoomControls() {
-    //remove existing listeners to prevent duplicates
-    this.removeZoomListeners();
-
-    //bind methods to preserve 'this' context
-    this.zoomInHandler = () => this.zoomIn();
-    this.zoomOutHandler = () => this.zoomOut();
-    this.zoomResetHandler = () => this.zoomReset();
-
-    //add event listeners
-    document
-      .getElementById("zoom-in")
-      ?.addEventListener("click", this.zoomInHandler);
-    document
-      .getElementById("zoom-out")
-      ?.addEventListener("click", this.zoomOutHandler);
-    document
-      .getElementById("zoom-reset")
-      ?.addEventListener("click", this.zoomResetHandler);
-  }
-
-  //remove zoom event listeners
-  removeZoomListeners() {
-    document
-      .getElementById("zoom-in")
-      ?.removeEventListener("click", this.zoomInHandler);
-    document
-      .getElementById("zoom-out")
-      ?.removeEventListener("click", this.zoomOutHandler);
-    document
-      .getElementById("zoom-reset")
-      ?.removeEventListener("click", this.zoomResetHandler);
-  }
-
-  //zoom in function
-  zoomIn() {
-    if (this.zoomScale < this.maxZoom) {
-      this.zoomScale += this.zoomStep;
-      this.applyZoom();
-    }
-  }
-
-  //zoom out function
-  zoomOut() {
-    if (this.zoomScale > this.minZoom) {
-      this.zoomScale -= this.zoomStep;
-      this.applyZoom();
-    }
-  }
-
-  //reset zoom function
-  zoomReset() {
-    this.zoomScale = 1;
-    //also reset scroll position
-    d3.select(this.container)
-      .property("scrollTop", 0)
-      .property("scrollLeft", 0);
-    this.applyZoom();
-  }
-
-  //apply zoom transformation
-  applyZoom() {
-    if (this.zoomGroup) {
-      this.zoomGroup
-        .transition()
-        .duration(300)
-        .attr("transform-origin", "center")
-        .attr("transform", `scale(${this.zoomScale})`);
-    }
-  }
-
   destroy() {
     //clean after switching views
-    this.removeZoomListeners(); //clean up event listeners
     d3.select(this.container).selectAll("*").remove();
   }
 }

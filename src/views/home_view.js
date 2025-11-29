@@ -81,7 +81,7 @@ export class HomeView {
       id: genre,
       genre: genre,
       fans: fans.total,
-      radius: Math.max(14.5, Math.sqrt(fans.total * 0.145)),
+      radius: Math.max(12.5, Math.sqrt(fans.total * 0.2)),
     }));
 
     //create circles first
@@ -131,6 +131,166 @@ export class HomeView {
     });
 
     //USAR O X E O Y DOS circles PARA O ALGORITMO DAS BANDAS ANDAR ENTRE ELES
+    //BANDS RENDER HERE
+    // ------------------------------------------------------
+
+    const Bands = this.data.reduce((list, el) => {
+      if (!list.hasOwnProperty(el.band_name)) {
+        list[el.band_name] = {
+          band_name: el.band_name,
+          origin: el.origin,
+          split: el.split,
+          style: el.style,
+          fans: el.fans,
+        };
+      }
+      return list;
+    }, {});
+
+    console.log(Bands);
+
+    const bandNodes = Object.values(Bands).map((band) => ({
+      id: band.band_name,
+      band_name: band.band_name,
+      origin: band.origin,
+      fans: band.fans,
+      radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
+      style: band.style,
+      x: Math.random() * this.canvasWidth,
+      y: Math.random() * this.canvasHeight,
+      orbitalAngle: Math.random() * Math.PI * 2,
+      angularVelocity: 0.01 + Math.random() * 0.02,
+      currentGenreIndex: 0,
+      orbitsCompleted: 0,
+      targetOrbits: 4,
+      orbitalRadius: nodes.find((n) => n.genre === band.style[0])
+        ? nodes.find((n) => n.genre === band.style[0]).radius + 5
+        : 100,
+      state: "orbiting",
+      targetGenre: band.style[0],
+      transitionProgress: 0,
+    }));
+
+    const bandCircles = this.zoomGroup
+      .selectAll(".band-circle")
+      .data(bandNodes)
+      .enter()
+      .append("circle")
+      .attr("class", "band-circle")
+      .attr("r", (d) => d.radius)
+      .attr("cx", (d) => d.x)
+      .attr("cy", (d) => d.y)
+      .attr("fill", "orange")
+      .attr("opacity", 0.7)
+      .style("cursor", "pointer")
+      .on("click", function () {
+        const currentFill = d3.select(this).attr("fill");
+        const newFill = currentFill === "orange" ? "#00f" : "orange";
+        d3.select(this).attr("fill", newFill);
+      });
+
+    //use d3.timer to create a continuous animation
+    d3.timer(function (elapsed) {
+      for (let i = 0; i < bandNodes.length; i++) {
+        const band = bandNodes[i];
+        const genre = band.style[band.currentGenreIndex]; //take first genre for simplicity
+        const genreNode = nodes.find((n) => n.genre === genre);
+
+        if (
+          genreNode &&
+          typeof genreNode.x === "number" &&
+          typeof genreNode.y === "number"
+        ) {
+          //calculate orbital position around genre
+
+          //update position based on orbital mechanics
+
+          if (band.state === "orbiting") {
+            const fullRotation = 2 * Math.PI;
+
+            if (band.orbitalAngle >= fullRotation) {
+              band.orbitalAngle = band.orbitalAngle % fullRotation;
+              band.orbitsCompleted += 1;
+
+              if (band.orbitsCompleted >= band.targetOrbits) {
+                band.state = "traveling";
+                band.transitionProgress = 0;
+                band.orbitsCompleted = 0;
+              }
+            }
+
+            band.x =
+              genreNode.x + Math.cos(band.orbitalAngle) * band.orbitalRadius;
+            band.y =
+              genreNode.y + Math.sin(band.orbitalAngle) * band.orbitalRadius;
+            band.orbitalAngle += band.angularVelocity;
+          } else if (band.state === "traveling") {
+            //linear interpolation to next genre
+            const nextGenre =
+              band.style[(band.currentGenreIndex + 1) % band.style.length];
+            const nextGenreNode = nodes.find((n) => n.genre === nextGenre);
+            if (nextGenreNode) {
+              //store starting position for smooth interpolation
+              if (!band.startX) {
+                band.startX = band.x;
+                band.startY = band.y;
+              }
+
+              band.transitionProgress += 0.0025; //increased speed for smoother transition
+
+              //smooth easing function for natural movement
+              const easeProgress =
+                band.transitionProgress *
+                band.transitionProgress *
+                (3 - 2 * band.transitionProgress);
+
+              //smooth interpolation from start to target
+              band.x =
+                band.startX + (nextGenreNode.x - band.startX) * easeProgress;
+              band.y =
+                band.startY + (nextGenreNode.y - band.startY) * easeProgress;
+
+              //check distance for arrival
+              const distance = Math.sqrt(
+                (band.x - nextGenreNode.x) ** 2 +
+                  (band.y - nextGenreNode.y) ** 2
+              );
+
+              if (
+                band.transitionProgress >= 1 ||
+                distance < nextGenreNode.radius + 10
+              ) {
+                band.state = "orbiting";
+                //fix arrival angle calculation
+                const arrivalAngle = Math.atan2(
+                  band.y - nextGenreNode.y,
+                  band.x - nextGenreNode.x
+                );
+                band.orbitalAngle = arrivalAngle;
+                band.orbitalRadius = nextGenreNode.radius + 5;
+                band.targetGenre = nextGenre;
+                band.transitionProgress = 0;
+                band.orbitsCompleted = 0;
+                band.currentGenreIndex =
+                  (band.currentGenreIndex + 1) % band.style.length;
+                //clear starting position
+                band.startX = undefined;
+                band.startY = undefined;
+              }
+            }
+          }
+
+          //update
+          bandCircles
+            .filter((d) => d.id === band.id)
+            .attr("cx", band.x)
+            .attr("cy", band.y);
+        } else {
+          //if no genre found or positions not ready, keep current position
+          // Don't move until genre positions are available
+        }
+      }
+    });
 
     //D3 rendering view specific
   }

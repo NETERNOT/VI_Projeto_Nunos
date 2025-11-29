@@ -59,6 +59,7 @@ export class HomeView {
         .attr("stroke-width", 5 / transform.k);
     }
 
+    //create zoom behavior
     const zoom = d3
       .zoom()
       .scaleExtent([this.minZoom, this.maxZoom])
@@ -68,13 +69,14 @@ export class HomeView {
       ])
       .on("zoom", zoomed);
 
+    //call the zoom behavior on the main SVG
     mainSvg.call(zoom);
 
     //store zoom behavior for button controls
     this.zoom = zoom;
     this.mainSvg = mainSvg;
 
-    console.log(Genres);
+    console.log(Genres); //log the genres object for debug
 
     //convert Genres object to array for D3 simulation
     const nodes = Object.entries(Genres).map(([genre, fans]) => ({
@@ -92,6 +94,7 @@ export class HomeView {
       .append("g")
       .attr("class", "genre-group");
 
+    //append circle and text to each group
     circles
       .append("circle")
       .attr("r", (d) => d.radius)
@@ -112,7 +115,7 @@ export class HomeView {
       .attr("pointer-events", "none")
       .text((d) => d.genre);
 
-    //set up force simulation
+    //set up force simulation for the genre nodes
     const simulation = d3
       .forceSimulation(nodes)
       .force("charge", d3.forceManyBody().strength(-8))
@@ -134,6 +137,7 @@ export class HomeView {
     //BANDS RENDER HERE
     // ------------------------------------------------------
 
+    //list of bands with their details
     const Bands = this.data.reduce((list, el) => {
       if (!list.hasOwnProperty(el.band_name)) {
         list[el.band_name] = {
@@ -147,8 +151,9 @@ export class HomeView {
       return list;
     }, {});
 
-    console.log(Bands);
+    console.log(Bands); //log the bands for debug
 
+    //create band nodes with orbital mechanics
     const bandNodes = Object.values(Bands).map((band) => ({
       id: band.band_name,
       band_name: band.band_name,
@@ -156,8 +161,8 @@ export class HomeView {
       fans: band.fans,
       radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
       style: band.style,
-      x: Math.random() * this.canvasWidth,
-      y: Math.random() * this.canvasHeight,
+      x: null,
+      y: null,
       orbitalAngle: Math.random() * Math.PI * 2,
       angularVelocity: 0.01 + Math.random() * 0.02,
       currentGenreIndex: 0,
@@ -171,6 +176,7 @@ export class HomeView {
       transitionProgress: 0,
     }));
 
+    //create band circles
     const bandCircles = this.zoomGroup
       .selectAll(".band-circle")
       .data(bandNodes)
@@ -192,33 +198,33 @@ export class HomeView {
     //use d3.timer to create a continuous animation
     d3.timer(function (elapsed) {
       for (let i = 0; i < bandNodes.length; i++) {
-        const band = bandNodes[i];
+        const band = bandNodes[i]; //get each band
         const genre = band.style[band.currentGenreIndex]; //take first genre for simplicity
-        const genreNode = nodes.find((n) => n.genre === genre);
+        const genreNode = nodes.find((n) => n.genre === genre); //find genre node
 
         if (
           genreNode &&
           typeof genreNode.x === "number" &&
           typeof genreNode.y === "number"
         ) {
-          //calculate orbital position around genre
-
-          //update position based on orbital mechanics
+          //calculate orbital position around genre and update position based on orbital mechanics
 
           if (band.state === "orbiting") {
-            const fullRotation = 2 * Math.PI;
+            const fullRotation = 2 * Math.PI; //full circle in radians
 
+            //if it completes a full orbit, increment orbitsCompleted
             if (band.orbitalAngle >= fullRotation) {
               band.orbitalAngle = band.orbitalAngle % fullRotation;
               band.orbitsCompleted += 1;
 
+              //if reached target orbits, switch to traveling state
               if (band.orbitsCompleted >= band.targetOrbits) {
                 band.state = "traveling";
-                band.transitionProgress = 0;
-                band.orbitsCompleted = 0;
+                band.transitionProgress = 0; //reset transition progress
+                band.orbitsCompleted = 0; //reset orbits completed
               }
             }
-
+            //calculate new position in orbit
             band.x =
               genreNode.x + Math.cos(band.orbitalAngle) * band.orbitalRadius;
             band.y =
@@ -256,6 +262,7 @@ export class HomeView {
                   (band.y - nextGenreNode.y) ** 2
               );
 
+              //if arrived, switch to orbiting state
               if (
                 band.transitionProgress >= 1 ||
                 distance < nextGenreNode.radius + 10
@@ -266,6 +273,7 @@ export class HomeView {
                   band.y - nextGenreNode.y,
                   band.x - nextGenreNode.x
                 );
+                //reset orbital parameters for new genre
                 band.orbitalAngle = arrivalAngle;
                 band.orbitalRadius = nextGenreNode.radius + 5;
                 band.targetGenre = nextGenre;

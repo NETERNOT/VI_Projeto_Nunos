@@ -62,6 +62,10 @@ export class HomeView {
     const zoom = d3
       .zoom()
       .scaleExtent([this.minZoom, this.maxZoom])
+      .translateExtent([
+        [-200, -200],
+        [this.canvasWidth + 200, this.canvasHeight + 200],
+      ])
       .on("zoom", zoomed);
 
     mainSvg.call(zoom);

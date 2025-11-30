@@ -206,6 +206,8 @@ export class HomeView {
       .attr("dominant-baseline", "central")
       .attr("font-size", (d) => d.radius / 1.5)
       .attr("opacity", 1)
+      .attr("class", "band-text")
+      .attr("dy", (d) => d.radius) // Move text below circle
       .attr("fill", "#FFFFFF")
       .attr("pointer-events", "none")
       .text((d) => d.band_name);

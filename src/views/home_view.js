@@ -57,6 +57,18 @@ export class HomeView {
       self.zoomGroup
         .attr("transform", transform)
         .attr("stroke-width", 5 / transform.k);
+
+      // Change text opacity based on zoom scale (transform.k)
+      const minZoom = 1.0; // Start fading in at 1x zoom
+      const maxZoom = 2.0; // Full opacity at 2x zoom
+
+      // Calculate opacity: 0 when k < minZoom, 1 when k >= maxZoom
+      const textOpacity = Math.min(
+        1,
+        Math.max(0, (transform.k - minZoom) / (maxZoom - minZoom))
+      );
+
+      self.zoomGroup.selectAll(".band-text").attr("opacity", textOpacity);
     }
 
     //create zoom behavior
@@ -156,8 +168,8 @@ export class HomeView {
       fans: band.fans,
       radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
       style: band.style,
-      x: null,
-      y: null,
+      x: Math.random() * this.canvasWidth,
+      y: Math.random() * this.canvasHeight,
       orbitalAngle: Math.random() * Math.PI * 2,
       angularVelocity: 0.01 + Math.random() * 0.02,
       currentGenreIndex: 0,
@@ -173,17 +185,30 @@ export class HomeView {
 
     //create band circles
     const bandCircles = this.zoomGroup
-      .selectAll(".band-circle")
+      .selectAll(".band-group")
       .data(bandNodes)
       .enter()
+      .append("g")
+      .attr("class", "band-group");
+
+    //append circle and text to each band group
+    bandCircles
       .append("circle")
       .attr("class", "band-circle")
       .attr("r", (d) => d.radius)
-      .attr("cx", (d) => d.x)
-      .attr("cy", (d) => d.y)
       .attr("fill", "orange")
       .attr("opacity", 0.7)
       .style("cursor", "pointer");
+
+    bandCircles
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("font-size", (d) => d.radius / 1.5)
+      .attr("opacity", 1)
+      .attr("fill", "#FFFFFF")
+      .attr("pointer-events", "none")
+      .text((d) => d.band_name);
 
     //selected band and genre for interaction
     let bandOrGenre = null;
@@ -227,7 +252,7 @@ export class HomeView {
             }
           }
 
-          d3.selectAll(".band-circle").attr("opacity", (d) => {
+          d3.selectAll(".band-group").attr("opacity", (d) => {
             if (selectedBand && d.id === selectedBand.id) {
               return 1.0; //highlight selected band
             } else if (selectedBand) {
@@ -259,11 +284,11 @@ export class HomeView {
             if (selectedBand === null) {
               for (let j = 0; j < bandNodes.length; j++) {
                 if (bandNodes[j].style.includes(nodes[i].genre)) {
-                  d3.selectAll(".band-circle")
+                  d3.selectAll(".band-group")
                     .filter((d) => d.id === bandNodes[j].id)
                     .attr("opacity", 1.0);
                 } else {
-                  d3.selectAll(".band-circle")
+                  d3.selectAll(".band-group")
                     .filter((d) => d.id === bandNodes[j].id)
                     .attr("opacity", 0.2);
                 }
@@ -291,7 +316,7 @@ export class HomeView {
       document.getElementById("selected-genre-text").textContent = "Genre";
 
       //reset opacities
-      d3.selectAll(".band-circle").attr("opacity", 0.7);
+      d3.selectAll(".band-group").attr("opacity", 0.7);
       d3.selectAll(".genre-group").attr("opacity", 1.0);
     });
 
@@ -391,8 +416,7 @@ export class HomeView {
           //update
           bandCircles
             .filter((d) => d.id === band.id)
-            .attr("cx", band.x)
-            .attr("cy", band.y);
+            .attr("transform", `translate(${band.x}, ${band.y})`);
         } else {
           //if no genre found or positions not ready, keep current position
           // Don't move until genre positions are available

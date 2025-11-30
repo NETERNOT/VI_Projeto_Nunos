@@ -99,12 +99,7 @@ export class HomeView {
       .append("circle")
       .attr("r", (d) => d.radius)
       .attr("fill", "#ccc")
-      .style("cursor", "pointer")
-      .on("click", function () {
-        const currentFill = d3.select(this).attr("fill");
-        const newFill = currentFill === "#ccc" ? "#f00" : "#ccc";
-        d3.select(this).attr("fill", newFill);
-      });
+      .style("cursor", "pointer");
 
     circles
       .append("text")
@@ -188,12 +183,117 @@ export class HomeView {
       .attr("cy", (d) => d.y)
       .attr("fill", "orange")
       .attr("opacity", 0.7)
-      .style("cursor", "pointer")
-      .on("click", function () {
-        const currentFill = d3.select(this).attr("fill");
-        const newFill = currentFill === "orange" ? "#00f" : "orange";
-        d3.select(this).attr("fill", newFill);
-      });
+      .style("cursor", "pointer");
+
+    //selected band and genre for interaction
+    let bandOrGenre = null;
+    let selectedBand = null;
+    let selectedGenre = null;
+
+    //add click interaction to display selected band and genre
+    for (let i = 0; i < bandNodes.length; i++) {
+      bandCircles
+        .filter((d) => d.id === bandNodes[i].id)
+        .on("click", function () {
+          bandOrGenre = "band";
+          console.log(bandOrGenre);
+
+          if (bandOrGenre === "band") {
+            selectedGenre = null;
+
+            const selectedBandText =
+              document.getElementById("selected-band-text");
+            const selectedGenreText = document.getElementById(
+              "selected-genre-text"
+            );
+
+            selectedBandText.textContent = "Band: " + bandNodes[i].band_name;
+            selectedGenreText.textContent = "Genre";
+            selectedBand = bandNodes[i];
+
+            //highlight genres of selected band
+            if (selectedGenre === null) {
+              for (let j = 0; j < nodes.length; j++) {
+                if (bandNodes[i].style.includes(nodes[j].genre)) {
+                  d3.selectAll(".genre-group")
+                    .filter((d) => d.id === nodes[j].id)
+                    .attr("opacity", 1.0);
+                } else {
+                  d3.selectAll(".genre-group")
+                    .filter((d) => d.id === nodes[j].id)
+                    .attr("opacity", 0.2);
+                }
+              }
+            }
+          }
+
+          d3.selectAll(".band-circle").attr("opacity", (d) => {
+            if (selectedBand && d.id === selectedBand.id) {
+              return 1.0; //highlight selected band
+            } else if (selectedBand) {
+              return 0.2; //dim other bands
+            }
+          });
+        });
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      circles
+        .filter((d) => d.id === nodes[i].id)
+        .on("click", function () {
+          bandOrGenre = "genre";
+          console.log(bandOrGenre);
+
+          if (bandOrGenre === "genre") {
+            const selectedBandText =
+              document.getElementById("selected-band-text");
+            const selectedGenreText = document.getElementById(
+              "selected-genre-text"
+            );
+            selectedGenreText.textContent = "Genre: " + nodes[i].genre;
+            selectedGenre = nodes[i];
+            selectedBand = null;
+            selectedBandText.textContent = "Band";
+
+            //highlight bands of selected genre
+            if (selectedBand === null) {
+              for (let j = 0; j < bandNodes.length; j++) {
+                if (bandNodes[j].style.includes(nodes[i].genre)) {
+                  d3.selectAll(".band-circle")
+                    .filter((d) => d.id === bandNodes[j].id)
+                    .attr("opacity", 1.0);
+                } else {
+                  d3.selectAll(".band-circle")
+                    .filter((d) => d.id === bandNodes[j].id)
+                    .attr("opacity", 0.2);
+                }
+              }
+            }
+          }
+
+          d3.selectAll(".genre-group").attr("opacity", (d) => {
+            if (selectedGenre && d.id === selectedGenre.id) {
+              return 1.0; //highlight selected band
+            } else if (selectedGenre) {
+              return 0.2; //highlight bands of selected genre
+            }
+          });
+        });
+    }
+
+    //reset button functionality
+    const resetButton = document.getElementById("reset-button");
+    resetButton.addEventListener("click", () => {
+      selectedBand = null;
+      selectedGenre = null;
+
+      document.getElementById("selected-band-text").textContent = "Band";
+      document.getElementById("selected-genre-text").textContent = "Genre";
+
+      //reset opacities
+      d3.selectAll(".band-circle").attr("opacity", 0.7);
+      d3.selectAll(".genre-group").attr("opacity", 1.0);
+    });
 
     //use d3.timer to create a continuous animation
     d3.timer(function (elapsed) {

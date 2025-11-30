@@ -1,3 +1,5 @@
+import { createNodes } from "../nodes/createNodes.js";
+
 export class HomeView {
   constructor(container, rawData, genreData) {
     this.container = container;
@@ -76,30 +78,10 @@ export class HomeView {
       fans: fans.total,
       radius: Math.max(12.5, Math.sqrt(fans.total * 0.2)),
     }));
+    console.log(nodes); //log the genre nodes for debug
 
     //create circles first
-    const circles = this.zoomGroup
-      .selectAll(".genre-group")
-      .data(nodes)
-      .enter()
-      .append("g")
-      .attr("class", "genre-group");
-
-    //append circle and text to each group
-    circles
-      .append("circle")
-      .attr("r", (d) => d.radius)
-      .attr("fill", "#ccc")
-      .style("cursor", "pointer");
-
-    circles
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("dominant-baseline", "central")
-      .attr("font-size", (d) => d.radius / 6 + 1)
-      .attr("fill", "#000")
-      .attr("pointer-events", "none")
-      .text((d) => d.genre);
+    const circles = createNodes(nodes, this.zoomGroup, "genre");
 
     //set up force simulation for the genre nodes
     const simulation = d3
@@ -137,7 +119,7 @@ export class HomeView {
       return list;
     }, {});
 
-    //console.log(Bands); //log the bands for debug
+    console.log(Bands); //log the bands for debug
 
     //create band nodes with orbital mechanics
     const bandNodes = Object.values(Bands).map((band) => ({
@@ -163,33 +145,7 @@ export class HomeView {
     }));
 
     //create band circles
-    const bandCircles = this.zoomGroup
-      .selectAll(".band-group")
-      .data(bandNodes)
-      .enter()
-      .append("g")
-      .attr("class", "band-group");
-
-    //append circle and text to each band group
-    bandCircles
-      .append("circle")
-      .attr("class", "band-circle")
-      .attr("r", (d) => d.radius)
-      .attr("fill", "orange")
-      .attr("opacity", 0.7)
-      .style("cursor", "pointer");
-
-    bandCircles
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("dominant-baseline", "central")
-      .attr("font-size", (d) => d.radius / 1.5)
-      .attr("opacity", 1)
-      .attr("class", "band-text")
-      .attr("dy", (d) => d.radius) // Move text below circle
-      .attr("fill", "#FFFFFF")
-      .attr("pointer-events", "none")
-      .text((d) => d.band_name);
+    const bandCircles = createNodes(bandNodes, this.zoomGroup, "band")
 
     //selected band and genre for interaction
     let bandOrGenre = null;

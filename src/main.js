@@ -1,13 +1,14 @@
 import { HomeView } from "./views/home_view.js";
 import { BandView } from "./views/band_view.js";
 import { GenreView } from "./views/genre_view.js";
-import { loadCsvData } from "./data/dataLoader.js";
+import { rawDataPromise, genresListPromise } from "./data/index.js";
 
 class ViewController {
   constructor() {
     //initialize variables as null to get the content later
     this.currentView = null;
-    this.data = null;
+    this.rawData = null;
+    this.genreData = null;
     this.container = null;
   }
 
@@ -24,8 +25,11 @@ class ViewController {
   //function to load the csv data and log if it catches it
   async loadData() {
     //load data CSV
-    this.data = await loadCsvData();
-    console.log("Data loaded:", this.data.length, "records");
+    this.rawData = await rawDataPromise;
+    console.log("Raw Data loaded:", this.rawData.length, "records");
+
+    this.genreData = await genresListPromise;
+    console.log("Genre Data loaded:", Object.keys(this.genreData).length, "genres");
   }
 
   //function to render and switch between views
@@ -38,13 +42,13 @@ class ViewController {
     //create new view
     switch (viewName) {
       case "home_view":
-        this.currentView = new HomeView(this.container, this.data);
+        this.currentView = new HomeView(this.container, this.rawData, this.genreData);
         break;
       case "band_view":
-        this.currentView = new BandView(this.container, this.data);
+        this.currentView = new BandView(this.container, this.rawData);
         break;
       case "genre_view":
-        this.currentView = new GenreView(this.container, this.data);
+        this.currentView = new GenreView(this.container, this.rawData);
         break;
     }
 

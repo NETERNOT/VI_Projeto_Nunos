@@ -1,7 +1,8 @@
 export class HomeView {
-  constructor(container, data) {
+  constructor(container, rawData, genreData) {
     this.container = container;
-    this.data = data;
+    this.rawData = rawData;
+    this.genreData = genreData
 
     this.zoomScale = 1; //initial zoom scale
     this.minZoom = 0.2;
@@ -15,28 +16,6 @@ export class HomeView {
 
   render() {
     //D3 rendering
-
-    //list of genres with total fans and origin breakdown
-    const Genres = this.data.reduce((list, el) => {
-      el.style.forEach((genre) => {
-        if (!list.hasOwnProperty(genre)) {
-          list[genre] = { total: el.fans };
-        } else {
-          list[genre].total += el.fans;
-        }
-      });
-      return list;
-    }, {});
-
-    //list of origins per genre with fans
-    for (let band of this.data) {
-      for (let genre of band.style) {
-        if (!Genres[genre].hasOwnProperty(band.origin)) {
-          Genres[genre][band.origin] = 0;
-        }
-        Genres[genre][band.origin] += band.fans;
-      }
-    }
 
     //create main SVG container using full window dimensions
     const mainSvg = d3
@@ -88,10 +67,10 @@ export class HomeView {
     this.zoom = zoom;
     this.mainSvg = mainSvg;
 
-    console.log(Genres); //log the genres object for debug
+    //console.log(this.genreData); //log the this.genreData object for debug
 
-    //convert Genres object to array for D3 simulation
-    const nodes = Object.entries(Genres).map(([genre, fans]) => ({
+    //convert this.genreData object to array for D3 simulation
+    const nodes = Object.entries(this.genreData).map(([genre, fans]) => ({
       id: genre,
       genre: genre,
       fans: fans.total,
@@ -145,7 +124,7 @@ export class HomeView {
     // ------------------------------------------------------
 
     //list of bands with their details
-    const Bands = this.data.reduce((list, el) => {
+    const Bands = this.rawData.reduce((list, el) => {
       if (!list.hasOwnProperty(el.band_name)) {
         list[el.band_name] = {
           band_name: el.band_name,
@@ -158,7 +137,7 @@ export class HomeView {
       return list;
     }, {});
 
-    console.log(Bands); //log the bands for debug
+    //console.log(Bands); //log the bands for debug
 
     //create band nodes with orbital mechanics
     const bandNodes = Object.values(Bands).map((band) => ({
@@ -238,7 +217,7 @@ export class HomeView {
             selectedGenreText.textContent = "Genre";
             selectedBand = bandNodes[i];
 
-            //highlight genres of selected band
+            //highlight this.genreData of selected band
             if (selectedGenre === null) {
               for (let j = 0; j < nodes.length; j++) {
                 if (bandNodes[i].style.includes(nodes[j].genre)) {

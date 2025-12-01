@@ -1,5 +1,6 @@
 import { createNodes } from "../nodes/createNodes.js";
 import { extractBands } from "../data/extractBands.js";
+import { forceSimulation } from "../nodes/forceSimulation.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -76,22 +77,13 @@ export class HomeView {
     const circles = createNodes(this.genreData, this.zoomGroup, "genre");
 
     //set up force simulation for the genre nodes
-    const simulation = d3
-      .forceSimulation(this.genreData)
-      .force("charge", d3.forceManyBody().strength(-8))
-      .force(
-        "collision",
-        d3.forceCollide().radius((d) => d.radius + 5)
-      )
-      .force(
-        "center",
-        d3.forceCenter(this.canvasWidth / 2, this.canvasHeight / 2)
-      );
-
-    //update positions on each tick
-    simulation.on("tick", () => {
-      circles.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
-    });
+    forceSimulation(
+      this.genreData,
+      circles,
+      -8,
+      this.canvasWidth,
+      this.canvasHeight
+    );
 
     //USAR O X E O Y DOS circles PARA O ALGORITMO DAS BANDAS ANDAR ENTRE ELES
     //BANDS RENDER HERE

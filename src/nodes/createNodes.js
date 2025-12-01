@@ -25,7 +25,7 @@ export function createNodes(data, zoomGroup, type) {
       .attr("font-size", type==="genre" ? (d) => d.radius / 6 + 1 : (d) => d.radius / 1.5)
       .attr("fill", type==="genre" ? "#000" : "#FFFFFF")
       .attr("pointer-events", "none")
-      .text(type==="genre" ? (d) => d.genre :(d) => d.band_name)
+      .text((d) => d.id) //quando mudar as estruturas, mudar isto para d.id para funcionar com os dois
       .attr("dy", type==="genre" ? 0 : (d) => d.radius)
       .attr("opacity", 1);
 

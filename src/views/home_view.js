@@ -164,14 +164,14 @@ export class HomeView {
 
             //highlight genres of selected band
             if (selectedGenre === null) {
-              for (let j = 0; j < this.genreData.length; j++) {
-                if (bandNodes[i].style.includes(this.genreD[j].id)) {
+              for (let genre of self.genreData) {
+                if (bandNodes[i].style.includes(genre.id)) {
                   d3.selectAll(".genre-group")
-                    .filter((d) => d.id === this.genreD[j].id)
+                    .filter((d) => d.id === genre.id)
                     .attr("opacity", 1.0);
                 } else {
                   d3.selectAll(".genre-group")
-                    .filter((d) => d.id === this.genreD[j].id)
+                    .filter((d) => d.id === genre.id)
                     .attr("opacity", 0.2);
                 }
               }
@@ -285,7 +285,7 @@ export class HomeView {
             //linear interpolation to next genre
             const nextGenre =
               band.style[(band.currentGenreIndex + 1) % band.style.length];
-            const nextGenreNode = nodes.find((n) => n.genre === nextGenre);
+            const nextGenreNode = self.genreData.find((n) => n.id === nextGenre);
             if (nextGenreNode) {
               //store starting position for smooth interpolation
               if (!band.startX) {

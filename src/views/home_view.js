@@ -1,10 +1,11 @@
 import { createNodes } from "../nodes/createNodes.js";
+import { extractBands } from "../data/extractBands.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
     this.container = container;
     this.rawData = rawData;
-    this.genreData = genreData
+    this.genreData = genreData;
 
     this.zoomScale = 1; //initial zoom scale
     this.minZoom = 0.2;
@@ -14,6 +15,8 @@ export class HomeView {
     //canvas dimensions to use full window
     this.canvasWidth = window.innerWidth;
     this.canvasHeight = window.innerHeight;
+
+    this.bandData = null;
   }
 
   render() {
@@ -94,54 +97,22 @@ export class HomeView {
     //BANDS RENDER HERE
     // ------------------------------------------------------
 
-    //list of bands with their details
-    const Bands = this.rawData.reduce((list, el) => {
-      if (!list.hasOwnProperty(el.band_name)) {
-        list[el.band_name] = {
-          band_name: el.band_name,
-          origin: el.origin,
-          split: el.split,
-          style: el.style,
-          fans: el.fans,
-        };
-      }
-      return list;
-    }, {});
-
-    console.log(Bands); //log the bands for debug
-
-    //create band nodes with orbital mechanics
-    const bandNodes = Object.values(Bands).map((band) => ({
-      id: band.band_name,
-      band_name: band.band_name,
-      origin: band.origin,
-      fans: band.fans,
-      radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
-      style: band.style,
-      x: Math.random() * this.canvasWidth,
-      y: Math.random() * this.canvasHeight,
-      orbitalAngle: Math.random() * Math.PI * 2,
-      angularVelocity: 0.01 + Math.random() * 0.02,
-      currentGenreIndex: 0,
-      orbitsCompleted: 0,
-      targetOrbits: 4,
-      orbitalRadius: this.genreData.find((n) => n.id === band.style[0])
-        ? this.genreData.find((n) => n.id === band.style[0]).radius + 5
-        : 100,
-      state: "orbiting",
-      targetGenre: band.style[0],
-      transitionProgress: 0,
-    }));
+    const bandNodes = extractBands(this.rawData, {
+      canvasWidth: this.canvasWidth,
+      canvasHeight: this.canvasHeight,
+      genreData: this.genreData,
+    });
+    console.log("Tranformar Nisto:", bandNodes);
 
     //create band circles
-    const bandCircles = createNodes(bandNodes, this.zoomGroup, "band")
+    const bandCircles = createNodes(bandNodes, this.zoomGroup, "band");
 
     //selected band and genre for interaction
     let bandOrGenre = null;
     let selectedBand = null;
     let selectedGenre = null;
 
-  //add click interaction to display selected band and genre
+    //add click interaction to display selected band and genre
     for (let i = 0; i < bandNodes.length; i++) {
       bandCircles
         .filter((d) => d.id === bandNodes[i].id)
@@ -285,7 +256,9 @@ export class HomeView {
             //linear interpolation to next genre
             const nextGenre =
               band.style[(band.currentGenreIndex + 1) % band.style.length];
-            const nextGenreNode = self.genreData.find((n) => n.id === nextGenre);
+            const nextGenreNode = self.genreData.find(
+              (n) => n.id === nextGenre
+            );
             if (nextGenreNode) {
               //store starting position for smooth interpolation
               if (!band.startX) {

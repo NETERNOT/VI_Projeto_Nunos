@@ -69,23 +69,12 @@ export class HomeView {
     this.zoom = zoom;
     this.mainSvg = mainSvg;
 
-    //console.log(this.genreData); //log the this.genreData object for debug
-
-    //convert this.genreData object to array for D3 simulation
-    const nodes = Object.entries(this.genreData).map(([genre, fans]) => ({
-      id: genre,
-      genre: genre,
-      fans: fans.total,
-      radius: Math.max(12.5, Math.sqrt(fans.total * 0.2)),
-    }));
-    console.log(nodes); //log the genre nodes for debug
-
     //create circles first
-    const circles = createNodes(nodes, this.zoomGroup, "genre");
+    const circles = createNodes(this.genreData, this.zoomGroup, "genre");
 
     //set up force simulation for the genre nodes
     const simulation = d3
-      .forceSimulation(nodes)
+      .forceSimulation(this.genreData)
       .force("charge", d3.forceManyBody().strength(-8))
       .force(
         "collision",
@@ -136,8 +125,8 @@ export class HomeView {
       currentGenreIndex: 0,
       orbitsCompleted: 0,
       targetOrbits: 4,
-      orbitalRadius: nodes.find((n) => n.genre === band.style[0])
-        ? nodes.find((n) => n.genre === band.style[0]).radius + 5
+      orbitalRadius: this.genreData.find((n) => n.id === band.style[0])
+        ? this.genreData.find((n) => n.id === band.style[0]).radius + 5
         : 100,
       state: "orbiting",
       targetGenre: band.style[0],
@@ -152,7 +141,7 @@ export class HomeView {
     let selectedBand = null;
     let selectedGenre = null;
 
-    //add click interaction to display selected band and genre
+  //add click interaction to display selected band and genre
     for (let i = 0; i < bandNodes.length; i++) {
       bandCircles
         .filter((d) => d.id === bandNodes[i].id)
@@ -173,16 +162,16 @@ export class HomeView {
             selectedGenreText.textContent = "Genre";
             selectedBand = bandNodes[i];
 
-            //highlight this.genreData of selected band
+            //highlight genres of selected band
             if (selectedGenre === null) {
-              for (let j = 0; j < nodes.length; j++) {
-                if (bandNodes[i].style.includes(nodes[j].genre)) {
+              for (let j = 0; j < this.genreData.length; j++) {
+                if (bandNodes[i].style.includes(this.genreD[j].id)) {
                   d3.selectAll(".genre-group")
-                    .filter((d) => d.id === nodes[j].id)
+                    .filter((d) => d.id === this.genreD[j].id)
                     .attr("opacity", 1.0);
                 } else {
                   d3.selectAll(".genre-group")
-                    .filter((d) => d.id === nodes[j].id)
+                    .filter((d) => d.id === this.genreD[j].id)
                     .attr("opacity", 0.2);
                 }
               }
@@ -199,9 +188,9 @@ export class HomeView {
         });
     }
 
-    for (let i = 0; i < nodes.length; i++) {
+    for (let genre of this.genreData) {
       circles
-        .filter((d) => d.id === nodes[i].id)
+        .filter((d) => d.id === genre.id)
         .on("click", function () {
           bandOrGenre = "genre";
           console.log(bandOrGenre);
@@ -212,15 +201,15 @@ export class HomeView {
             const selectedGenreText = document.getElementById(
               "selected-genre-text"
             );
-            selectedGenreText.textContent = "Genre: " + nodes[i].genre;
-            selectedGenre = nodes[i];
+            selectedGenreText.textContent = "Genre: " + genre.id;
+            selectedGenre = genre;
             selectedBand = null;
             selectedBandText.textContent = "Band";
 
             //highlight bands of selected genre
             if (selectedBand === null) {
               for (let j = 0; j < bandNodes.length; j++) {
-                if (bandNodes[j].style.includes(nodes[i].genre)) {
+                if (bandNodes[j].style.includes(genre.id)) {
                   d3.selectAll(".band-group")
                     .filter((d) => d.id === bandNodes[j].id)
                     .attr("opacity", 1.0);
@@ -262,7 +251,7 @@ export class HomeView {
       for (let i = 0; i < bandNodes.length; i++) {
         const band = bandNodes[i]; //get each band
         const genre = band.style[band.currentGenreIndex]; //take first genre for simplicity
-        const genreNode = nodes.find((n) => n.genre === genre); //find genre node
+        const genreNode = self.genreData.find((n) => n.id === genre); //find genre node
 
         if (
           genreNode &&
@@ -360,8 +349,6 @@ export class HomeView {
         }
       }
     });
-
-    //D3 rendering view specific
   }
 
   update(newData) {

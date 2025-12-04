@@ -1,10 +1,10 @@
-export function updateSimulation(info, elapsed){
-    const {
-        bandNodes = [],
-        bandCircles = d3.selectAll('.band-node'),
-        genreData = []
-    } = info;
-    
+export function updateSimulation(info, elapsed, speed) {
+  const {
+    bandNodes = [],
+    bandCircles = d3.selectAll(".band-node"),
+    genreData = [],
+  } = info;
+
   for (let band of bandNodes) {
     const genre = band.style[band.currentGenreIndex]; //take first genre for simplicity
     const genreNode = genreData.find((n) => n.id === genre); //find genre node
@@ -31,11 +31,12 @@ export function updateSimulation(info, elapsed){
             band.orbitsCompleted = 0; //reset orbits completed
           }
         }
+
         //calculate new position in orbit
         band.x = genreNode.x + Math.cos(band.orbitalAngle) * band.orbitalRadius;
         band.y = genreNode.y + Math.sin(band.orbitalAngle) * band.orbitalRadius;
-        band.orbitalAngle += band.angularVelocity;
-      } else if (band.state === "traveling") {
+        band.orbitalAngle += band.angularVelocity; //increment angle for next frame
+      } else if (band.state === "traveling" && !band.isPaused) {
         //linear interpolation to next genre
         const nextGenre =
           band.style[(band.currentGenreIndex + 1) % band.style.length];
@@ -47,13 +48,13 @@ export function updateSimulation(info, elapsed){
             band.startY = band.y;
           }
 
-          band.transitionProgress += 0.0025; //increased speed for smoother transition
+          band.transitionProgress += speed; //increment progress using the speed parameter
 
           //smooth easing function for natural movement
           const easeProgress =
             band.transitionProgress *
             band.transitionProgress *
-            (3 - 2 * band.transitionProgress);
+            (3 - 2 * band.transitionProgress); //smoothstep easing
 
           //smooth interpolation from start to target
           band.x = band.startX + (nextGenreNode.x - band.startX) * easeProgress;
@@ -90,10 +91,11 @@ export function updateSimulation(info, elapsed){
         }
       }
 
-      //update
       bandCircles
         .filter((d) => d.id === band.id)
         .attr("transform", `translate(${band.x}, ${band.y})`);
+
+      //update
     } else {
       //if no genre found or positions not ready, keep current position
       // Don't move until genre positions are available

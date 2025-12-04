@@ -14,6 +14,8 @@ export class HomeView {
     this.maxZoom = 4;
     this.zoomStep = 0.2;
 
+    this.travelSpeed = 0.0025; //speed of band travel between genres
+
     //canvas dimensions to use full window
     this.canvasWidth = window.innerWidth;
     this.canvasHeight = window.innerHeight;
@@ -140,6 +142,9 @@ export class HomeView {
             }
           }
 
+          let transitionProgressPlaceholder = bandNodes[i].transitionProgress;
+          let angularVelocityPlaceholder = bandNodes[i].angularVelocity;
+
           d3.selectAll(".band-group").attr("opacity", (d) => {
             if (selectedBand && d.id === selectedBand.id) {
               return 1.0; //highlight selected band
@@ -149,6 +154,23 @@ export class HomeView {
           });
         });
     }
+
+    bandCircles.on("mouseover", function (event, d) {
+      if (d.state === "orbiting") {
+        d.originalAngularVelocity = d.angularVelocity;
+        d.angularVelocity = 0;
+      } else if (d.state === "traveling") {
+        d.isPaused = true;
+      }
+    });
+
+    bandCircles.on("mouseleave", function (event, d) {
+      if (d.state === "orbiting") {
+        d.angularVelocity = d.originalAngularVelocity;
+      } else if (d.state === "traveling") {
+        d.isPaused = false;
+      }
+    });
 
     for (let genre of this.genreData) {
       circles
@@ -214,7 +236,7 @@ export class HomeView {
       bandCircles: bandCircles,
       genreData: this.genreData,
     };
-    d3.timer(elapsed => updateSimulation(info, elapsed));
+    d3.timer((elapsed) => updateSimulation(info, elapsed, this.travelSpeed));
   }
 
   update(newData) {

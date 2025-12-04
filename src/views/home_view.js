@@ -2,6 +2,9 @@ import { createNodes } from "../nodes/createNodes.js";
 import { extractBands } from "../data/extractBands.js";
 import { forceSimulation } from "../nodes/forceSimulation.js";
 import { updateSimulation } from "../nodes/nodeMovement.js";
+import { handleClick } from "../nodes/handleClick.js";
+import { handleHover } from "../nodes/handleHover.js";
+
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -86,135 +89,24 @@ export class HomeView {
       this.canvasHeight
     );
 
-    //USAR O X E O Y DOS circles PARA O ALGORITMO DAS BANDAS ANDAR ENTRE ELES
     //BANDS RENDER HERE
-    // ------------------------------------------------------
 
     const bandNodes = extractBands(this.rawData, {
       canvasWidth: this.canvasWidth,
       canvasHeight: this.canvasHeight,
       genreData: this.genreData,
     });
-    console.log("Tranformar Nisto:", bandNodes);
 
     //create band circles
     const bandCircles = createNodes(bandNodes, this.zoomGroup, "band");
 
     //selected band and genre for interaction
-    let bandOrGenre = null;
     let selectedBand = null;
     let selectedGenre = null;
 
     //add click interaction to display selected band and genre
-    for (let i = 0; i < bandNodes.length; i++) {
-      bandCircles
-        .filter((d) => d.id === bandNodes[i].id)
-        .on("click", function () {
-          bandOrGenre = "band";
-          console.log(bandOrGenre);
-
-          if (bandOrGenre === "band") {
-            selectedGenre = null;
-
-            const selectedBandText =
-              document.getElementById("selected-band-text");
-            const selectedGenreText = document.getElementById(
-              "selected-genre-text"
-            );
-
-            selectedBandText.textContent = "Band: " + bandNodes[i].band_name;
-            selectedGenreText.textContent = "Genre";
-            selectedBand = bandNodes[i];
-
-            //highlight genres of selected band
-            if (selectedGenre === null) {
-              for (let genre of self.genreData) {
-                if (bandNodes[i].style.includes(genre.id)) {
-                  d3.selectAll(".genre-group")
-                    .filter((d) => d.id === genre.id)
-                    .attr("opacity", 1.0);
-                } else {
-                  d3.selectAll(".genre-group")
-                    .filter((d) => d.id === genre.id)
-                    .attr("opacity", 0.2);
-                }
-              }
-            }
-          }
-
-          let transitionProgressPlaceholder = bandNodes[i].transitionProgress;
-          let angularVelocityPlaceholder = bandNodes[i].angularVelocity;
-
-          d3.selectAll(".band-group").attr("opacity", (d) => {
-            if (selectedBand && d.id === selectedBand.id) {
-              return 1.0; //highlight selected band
-            } else if (selectedBand) {
-              return 0.2; //dim other bands
-            }
-          });
-        });
-    }
-
-    bandCircles.on("mouseover", function (event, d) {
-      if (d.state === "orbiting") {
-        d.originalAngularVelocity = d.angularVelocity;
-        d.angularVelocity = 0;
-      } else if (d.state === "traveling") {
-        d.isPaused = true;
-      }
-    });
-
-    bandCircles.on("mouseleave", function (event, d) {
-      if (d.state === "orbiting") {
-        d.angularVelocity = d.originalAngularVelocity;
-      } else if (d.state === "traveling") {
-        d.isPaused = false;
-      }
-    });
-
-    for (let genre of this.genreData) {
-      circles
-        .filter((d) => d.id === genre.id)
-        .on("click", function () {
-          bandOrGenre = "genre";
-          console.log(bandOrGenre);
-
-          if (bandOrGenre === "genre") {
-            const selectedBandText =
-              document.getElementById("selected-band-text");
-            const selectedGenreText = document.getElementById(
-              "selected-genre-text"
-            );
-            selectedGenreText.textContent = "Genre: " + genre.id;
-            selectedGenre = genre;
-            selectedBand = null;
-            selectedBandText.textContent = "Band";
-
-            //highlight bands of selected genre
-            if (selectedBand === null) {
-              for (let j = 0; j < bandNodes.length; j++) {
-                if (bandNodes[j].style.includes(genre.id)) {
-                  d3.selectAll(".band-group")
-                    .filter((d) => d.id === bandNodes[j].id)
-                    .attr("opacity", 1.0);
-                } else {
-                  d3.selectAll(".band-group")
-                    .filter((d) => d.id === bandNodes[j].id)
-                    .attr("opacity", 0.2);
-                }
-              }
-            }
-          }
-
-          d3.selectAll(".genre-group").attr("opacity", (d) => {
-            if (selectedGenre && d.id === selectedGenre.id) {
-              return 1.0; //highlight selected band
-            } else if (selectedGenre) {
-              return 0.2; //highlight bands of selected genre
-            }
-          });
-        });
-    }
+    handleClick(bandNodes, bandCircles, circles, this.genreData)
+    handleHover(bandCircles)
 
     //reset button functionality
     const resetButton = document.getElementById("reset-button");

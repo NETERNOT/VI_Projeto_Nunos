@@ -1,3 +1,5 @@
+import { getBandInfo } from "../data/getBandInfo.js"
+
 export function handleClick(bandNodes, bandCircles, circles, genreData) {
 
   // Band click handler
@@ -36,6 +38,9 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
             return 0.2;
           }
         });
+
+        bandInfoUpdate(selectedBand)
+
       });
   }
 
@@ -44,6 +49,10 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
     circles
       .filter((d) => d.id === genre.id)
       .on("click", function () {
+        //hide aside
+        document.querySelector("aside").classList.toggle("active",0)
+
+
         let bandOrGenre = "genre";
         console.log(bandOrGenre);
 
@@ -78,4 +87,54 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
         });
       });
   }
+}
+
+
+async function  bandInfoUpdate(selectedBand){
+    const aside = document.querySelector("aside")
+
+    clearBandInfo(aside)
+
+    const info = await getBandInfo(selectedBand.band_name)
+
+    let img = document.createElement("img")
+
+    img.src = (info.strArtistWideThumb ? info.strArtistWideThumb : info-strArtistThumb)
+
+    let name = document.createElement("h2")
+    name.textContent = selectedBand.band_name
+
+    let originAndDate = document.createElement("p")
+    originAndDate.textContent = `${selectedBand.origin}, ${selectedBand.formed} - ${selectedBand.split === "-" ? "Present" : selectedBand.split}`
+
+    let genres = document.createElement("p")
+    let genreStr = selectedBand.style.join(", ")
+    genres.textContent = genreStr
+
+    let bio = document.createElement("p")
+    bio.textContent = info.strBiographyEN
+
+    aside.appendChild(img)
+    aside.appendChild(name)
+    aside.appendChild(originAndDate)
+    aside.appendChild(genres)
+    aside.appendChild(bio)
+
+    aside.classList.toggle("active", 1)
+ 
+}
+
+function clearBandInfo(aside){
+    //clear all content
+    aside.innerHTML = ""
+
+    //add back arrow
+    let backArrow = document.createElement("div")
+    backArrow.id = "back-arrow"
+    backArrow.textContent = "<-"
+    backArrow.addEventListener("click", ()=>{
+        aside.classList.toggle("active", 0)
+    })
+
+    aside.appendChild(backArrow)
 }

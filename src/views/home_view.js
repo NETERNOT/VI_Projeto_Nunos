@@ -120,6 +120,8 @@ export class HomeView {
       //reset opacities
       d3.selectAll(".band-group").attr("opacity", 0.7);
       d3.selectAll(".genre-group").attr("opacity", 1.0);
+
+      document.querySelector("aside").classList.toggle("active",0)
     });
 
     //use d3.timer to create a continuous animation

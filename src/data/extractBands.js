@@ -9,6 +9,8 @@ export function extractBands(data, options = {}) {
       id: band.band_name,
       band_name: band.band_name,
       origin: band.origin,
+      formed:band.formed,
+      split:band.split,
       fans: band.fans,
       radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
       style: band.style,

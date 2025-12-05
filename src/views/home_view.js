@@ -4,7 +4,7 @@ import { forceSimulation } from "../nodes/forceSimulation.js";
 import { updateSimulation } from "../nodes/nodeMovement.js";
 import { handleClick } from "../nodes/handleClick.js";
 import { handleHover } from "../nodes/handleHover.js";
-
+import { getImages } from "../data/getImages.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -98,15 +98,20 @@ export class HomeView {
     });
 
     //create band circles
-    const bandCircles = createNodes(bandNodes, this.zoomGroup, "band");
+    const bandCircles = createNodes(
+      bandNodes,
+      this.zoomGroup,
+      "band",
+      getImages
+    );
 
     //selected band and genre for interaction
     let selectedBand = null;
     let selectedGenre = null;
 
     //add click interaction to display selected band and genre
-    handleClick(bandNodes, bandCircles, circles, this.genreData)
-    handleHover(bandCircles)
+    handleClick(bandNodes, bandCircles, circles, this.genreData);
+    handleHover(bandCircles);
 
     //reset button functionality
     const resetButton = document.getElementById("reset-button");

@@ -12,6 +12,7 @@ export function extractBands(data, options = {}) {
       formed:band.formed,
       split:band.split,
       fans: band.fans,
+      split: band.split,
       radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
       style: band.style,
       x: Math.random() * canvasWidth,
@@ -27,6 +28,7 @@ export function extractBands(data, options = {}) {
       state: "orbiting",
       targetGenre: band.style[0],
       transitionProgress: 0,
+      isPaused: false,
     });
 
     return list;

@@ -1,7 +1,6 @@
-import { getBandInfo } from "../data/getBandInfo.js"
+import { getBandInfo } from "../data/getBandInfo.js";
 
 export function handleClick(bandNodes, bandCircles, circles, genreData) {
-
   // Band click handler
   for (let band of bandNodes) {
     bandCircles
@@ -13,7 +12,9 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
         let selectedBand = band;
 
         const selectedBandText = document.getElementById("selected-band-text");
-        const selectedGenreText = document.getElementById("selected-genre-text");
+        const selectedGenreText = document.getElementById(
+          "selected-genre-text"
+        );
 
         selectedBandText.textContent = "Band: " + band.band_name;
         selectedGenreText.textContent = "Genre";
@@ -39,8 +40,7 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
           }
         });
 
-        bandInfoUpdate(selectedBand)
-
+        bandInfoUpdate(selectedBand);
       });
   }
 
@@ -50,17 +50,17 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
       .filter((d) => d.id === genre.id)
       .on("click", function () {
         //hide aside
-        document.querySelector("aside").classList.toggle("active",0)
-
+        document.querySelector("aside").classList.toggle("active", 0);
 
         let bandOrGenre = "genre";
         console.log(bandOrGenre);
 
         let selectedGenre = genre;
-        let selectedBand = null;
 
         const selectedBandText = document.getElementById("selected-band-text");
-        const selectedGenreText = document.getElementById("selected-genre-text");
+        const selectedGenreText = document.getElementById(
+          "selected-genre-text"
+        );
 
         selectedGenreText.textContent = "Genre: " + genre.id;
         selectedBandText.textContent = "Band";
@@ -89,52 +89,70 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
   }
 }
 
+async function bandInfoUpdate(selectedBand) {
+  const aside = document.querySelector("aside");
 
-async function  bandInfoUpdate(selectedBand){
-    const aside = document.querySelector("aside")
+  clearBandInfo(aside);
 
-    clearBandInfo(aside)
+  const info = await getBandInfo(selectedBand.band_name);
 
-    const info = await getBandInfo(selectedBand.band_name)
+  let img = document.createElement("img");
 
-    let img = document.createElement("img")
+  const priorityOrder = [
+    "strArtistWideThumb",
+    "strArtistThumb",
+    "strArtistLogo",
+    "strArtistCutout",
+    "strArtistClearart",
+    "strArtistFanart",
+    "strArtistFanart2",
+    "strArtistFanart3",
+    "strArtistFanart4",
+    "strArtistBanner",
+  ];
 
-    img.src = (info.strArtistWideThumb ? info.strArtistWideThumb : info-strArtistThumb)
+  for (let key of priorityOrder){
+    if(info[key]){
+        img.src = info[key];
+        break
+    }
+  }
 
-    let name = document.createElement("h2")
-    name.textContent = selectedBand.band_name
+  let name = document.createElement("h2");
+  name.textContent = selectedBand.band_name;
 
-    let originAndDate = document.createElement("p")
-    originAndDate.textContent = `${selectedBand.origin}, ${selectedBand.formed} - ${selectedBand.split === "-" ? "Present" : selectedBand.split}`
+  let originAndDate = document.createElement("p");
+  originAndDate.textContent = `${selectedBand.origin}, ${
+    selectedBand.formed
+  } - ${selectedBand.split === "-" ? "Present" : selectedBand.split}`;
 
-    let genres = document.createElement("p")
-    let genreStr = selectedBand.style.join(", ")
-    genres.textContent = genreStr
+  let genres = document.createElement("p");
+  let genreStr = selectedBand.style.join(", ");
+  genres.textContent = genreStr;
 
-    let bio = document.createElement("p")
-    bio.textContent = info.strBiographyEN
+  let bio = document.createElement("p");
+  bio.textContent = info.strBiographyEN;
 
-    aside.appendChild(img)
-    aside.appendChild(name)
-    aside.appendChild(originAndDate)
-    aside.appendChild(genres)
-    aside.appendChild(bio)
+  aside.appendChild(img);
+  aside.appendChild(name);
+  aside.appendChild(originAndDate);
+  aside.appendChild(genres);
+  aside.appendChild(bio);
 
-    aside.classList.toggle("active", 1)
- 
+  aside.classList.toggle("active", 1);
 }
 
-function clearBandInfo(aside){
-    //clear all content
-    aside.innerHTML = ""
+function clearBandInfo(aside) {
+  //clear all content
+  aside.innerHTML = "";
 
-    //add back arrow
-    let backArrow = document.createElement("div")
-    backArrow.id = "back-arrow"
-    backArrow.textContent = "<-"
-    backArrow.addEventListener("click", ()=>{
-        aside.classList.toggle("active", 0)
-    })
+  //add back arrow
+  let backArrow = document.createElement("div");
+  backArrow.id = "back-arrow";
+  backArrow.textContent = "<-";
+  backArrow.addEventListener("click", () => {
+    aside.classList.toggle("active", 0);
+  });
 
-    aside.appendChild(backArrow)
+  aside.appendChild(backArrow);
 }

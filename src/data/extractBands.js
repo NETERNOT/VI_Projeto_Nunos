@@ -10,6 +10,7 @@ export function extractBands(data, options = {}) {
       band_name: band.band_name,
       origin: band.origin,
       fans: band.fans,
+      split: band.split,
       radius: Math.max(1, Math.sqrt(band.fans * 0.01)),
       style: band.style,
       x: Math.random() * canvasWidth,

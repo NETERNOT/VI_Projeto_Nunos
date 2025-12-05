@@ -35,7 +35,20 @@ export function createNodes(data, zoomGroup, type, imageFiles) {
       .attr("x", (d) => -d.radius)
       .attr("y", (d) => -d.radius)
       .attr("href", (d) => {
-        const imageSet = d.split === "-" ? imageFiles(3) : imageFiles(4);
+        let imageSet;
+        if (d.split === "-") {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(1);
+          } else {
+            imageSet = imageFiles(3);
+          }
+        } else {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(2);
+          } else {
+            imageSet = imageFiles(4);
+          }
+        }
         return imageSet[0];
       })
       .attr("opacity", 0.7)
@@ -46,7 +59,20 @@ export function createNodes(data, zoomGroup, type, imageFiles) {
       currentFrame = (currentFrame + 1) % 4;
 
       imageElements.attr("href", function (d) {
-        const imageSet = d.split === "-" ? imageFiles(3) : imageFiles(4);
+        let imageSet;
+        if (d.split === "-") {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(1);
+          } else {
+            imageSet = imageFiles(3);
+          }
+        } else {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(2);
+          } else {
+            imageSet = imageFiles(4);
+          }
+        }
         return imageSet[currentFrame % imageSet.length];
       });
     }, 200);

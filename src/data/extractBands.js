@@ -26,6 +26,7 @@ export function extractBands(data, options = {}) {
       state: "orbiting",
       targetGenre: band.style[0],
       transitionProgress: 0,
+      isPaused: false,
     });
 
     return list;

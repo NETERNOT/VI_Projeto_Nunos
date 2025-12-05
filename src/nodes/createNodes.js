@@ -30,23 +30,23 @@ export function createNodes(data, zoomGroup, type, imageFiles) {
     const imageElements = circles
       .append("image")
       .attr("class", `${type}-circle`)
-      .attr("width", (d) => (d.split === "-" ? d.radius * 2 : d.radius * 3))
-      .attr("height", (d) => (d.split === "-" ? d.radius * 2 : d.radius * 3))
+      .attr("width", (d) => (d.split === "-" ? d.radius * 3 : d.radius * 2))
+      .attr("height", (d) => (d.split === "-" ? d.radius * 3 : d.radius * 2))
       .attr("x", (d) => -d.radius)
       .attr("y", (d) => -d.radius)
       .attr("href", (d) => {
         let imageSet;
         if (d.split === "-") {
           if (d.isPaused === true) {
-            imageSet = imageFiles(1);
-          } else {
-            imageSet = imageFiles(3);
-          }
-        } else {
-          if (d.isPaused === true) {
             imageSet = imageFiles(2);
           } else {
             imageSet = imageFiles(4);
+          }
+        } else {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(1);
+          } else {
+            imageSet = imageFiles(3);
           }
         }
         return imageSet[0];
@@ -62,15 +62,15 @@ export function createNodes(data, zoomGroup, type, imageFiles) {
         let imageSet;
         if (d.split === "-") {
           if (d.isPaused === true) {
-            imageSet = imageFiles(1);
-          } else {
-            imageSet = imageFiles(3);
-          }
-        } else {
-          if (d.isPaused === true) {
             imageSet = imageFiles(2);
           } else {
             imageSet = imageFiles(4);
+          }
+        } else {
+          if (d.isPaused === true) {
+            imageSet = imageFiles(1);
+          } else {
+            imageSet = imageFiles(3);
           }
         }
         return imageSet[currentFrame % imageSet.length];

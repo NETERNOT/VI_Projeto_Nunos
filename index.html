@@ -6,6 +6,13 @@
 
     <title>Visualizing Metal Bands</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" type="text/css" href="style.css" />
 
     <script src="libraries/d3.min.js"></script>
@@ -14,14 +21,25 @@
   <body>
     <div id="main-container">
       <div id="control-panel">
-        <p id="selected-band-text">Band</p>
-        <p id="selected-genre-text">Genre</p>
-        <button id="reset-button">Reset</button>
+        <div id="central-panel">
+          <input type="text" placeholder="Search..." id="search-bar">
+          
+        </input>
+          <div id="buttons-panel">
+            <button class="button" id="settings-button">
+              <img class="icon" src="public/assets/icons/settings.svg" />
+            </button>
+            <button class="button" id="reset-button">
+              <img class="icon" src="public/assets/icons/reset.svg" />
+            </button>
+          </div>
+        </div>
+          <ul id="search-results">
+        </ul>
       </div>
     </div>
 
-    <aside>
-    </aside>
+    <aside></aside>
 
     <div class="spread-container"></div>
 

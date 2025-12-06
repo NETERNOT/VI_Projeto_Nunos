@@ -4,6 +4,18 @@
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
+.biz-udmincho-regular {
+  font-family: "BIZ UDMincho", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PP Fraktion Sans";
+  src: url("public/assets/fonts/PPFraktionSans-Light.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
 
 html,
 body {
@@ -41,16 +53,114 @@ canvas {
 }
 
 #control-panel {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  width: 30rem;
+  padding: 0.5rem 1.25rem;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2.5rem;
   position: fixed;
-  bottom: 1rem;
-  left: 50vw;
+  left: 50%;
+  top: 90%;
+  transform: translate(-50%, -50%);
   z-index: 10;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: "PP Fraktion Sans", sans-serif;
   text-align: center;
+  outline: 1px solid white;
+}
+
+#search-results {
+  background-color: rgba(0, 0, 0, 0.65);
+  position: fixed;
+  bottom: 3rem;
+  width: 80%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#search-results li {
+  padding: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid white;
+  height: 3rem;
+  list-style: none;
+}
+
+#search-genre-list,
+#search-band-list {
+  padding: 0;
+  margin: 0;
+}
+
+#search-genre-list li:hover,
+#search-band-list li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+#search-results ul p {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#central-panel {
+  display: flex;
+  width: 100%;
+  height: 3rem;
+  align-items: center;
+  gap: 2rem;
+}
+
+#search-bar {
+  width: 80%;
+  height: 2rem;
+  color: white;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  outline: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 2.5rem;
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
+.button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+#buttons-panel {
+  width: 15%;
+  height: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  width: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.band-text {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
+.genre-text {
+  font-family: "BIZ UDMincho", serif;
 }
 
 aside {
@@ -94,7 +204,6 @@ aside {
   }
 }
 
-
 .spread-container {
   position: absolute;
   top: 1rem;
@@ -105,10 +214,9 @@ aside {
   & .country-div {
     width: 100%;
     display: flex;
-    gap: .5rem;
+    gap: 0.5rem;
     align-items: center;
   }
-
 
   & .bar {
     display: inline-block;

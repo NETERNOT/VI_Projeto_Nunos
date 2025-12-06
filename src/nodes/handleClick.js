@@ -13,13 +13,10 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
 
         let selectedBand = band;
 
-        const selectedBandText = document.getElementById("selected-band-text");
-        const selectedGenreText = document.getElementById(
-          "selected-genre-text"
-        );
-
-        selectedBandText.textContent = "Band: " + band.band_name;
-        selectedGenreText.textContent = "Genre";
+        //    const selectedBandText = document.getElementById("selected-band-text");
+        //    const selectedGenreText = document.getElementById("selected-genre-text");
+        //    selectedBandText.textContent = "Band: " + band.band_name;
+        //    selectedGenreText.textContent = "Genre";
 
         // Highlight genres of selected band
         for (let genre of genreData) {
@@ -62,13 +59,11 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
 
         let selectedGenre = genre;
 
-        const selectedBandText = document.getElementById("selected-band-text");
-        const selectedGenreText = document.getElementById(
-          "selected-genre-text"
-        );
+        // const selectedBandText = document.getElementById("selected-band-text");
+        // const selectedGenreText = document.getElementById( "selected-genre-text");
 
-        selectedGenreText.textContent = "Genre: " + genre.id;
-        selectedBandText.textContent = "Band";
+        // selectedGenreText.textContent = "Genre: " + genre.id;
+        // selectedBandText.textContent = "Band";
 
         // Highlight bands of selected genre
         for (let j = 0; j < bandNodes.length; j++) {
@@ -94,7 +89,7 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
   }
 }
 
-async function bandInfoUpdate(selectedBand) {
+export async function bandInfoUpdate(selectedBand) {
   const aside = document.querySelector("aside");
 
   clearBandInfo(aside);
@@ -162,7 +157,7 @@ function clearBandInfo(aside) {
   aside.appendChild(backArrow);
 }
 
-function updateFanSpread(fans) {
+export function updateFanSpread(fans) {
   let spreadContainer = document.querySelector(".spread-container");
   spreadContainer.innerHTML = "";
 

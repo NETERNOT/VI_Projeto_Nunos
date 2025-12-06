@@ -6,6 +6,8 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
     bandCircles
       .filter((d) => d.id === band.id)
       .on("click", function () {
+        document.querySelector(".spread-container").innerHTML = "";
+
         let bandOrGenre = "band";
         console.log(bandOrGenre);
 
@@ -160,73 +162,13 @@ function clearBandInfo(aside) {
   aside.appendChild(backArrow);
 }
 
-/* function updateFanSpread(fans) {
-  let spreadContainer = document.querySelector(".spread-container");
-  spreadContainer.innerHTML = "";
-
-  const countryToFlag = {
-    USA: "🇺🇸",
-    "United States": "🇺🇸",
-    Sweden: "🇸🇪",
-    "United Kingdom": "🇬🇧",
-    Finland: "🇫🇮",
-    Germany: "🇩🇪",
-    Poland: "🇵🇱",
-    Norway: "🇳🇴",
-    "The Netherlands": "🇳🇱",
-    Netherlands: "🇳🇱",
-    France: "🇫🇷",
-    Brazil: "🇧🇷",
-    Portugal: "🇵🇹",
-    Switzerland: "🇨🇭",
-    Austria: "🇦🇹",
-    Australia: "🇦🇺",
-    Canada: "🇨🇦",
-    Greece: "🇬🇷",
-    Israel: "🇮🇱",
-    Denmark: "🇩🇰",
-    Ireland: "🇮🇪",
-    Italy: "🇮🇹",
-    Russia: "🇷🇺",
-    Ukraine: "🇺🇦",
-    "Faroe Islands": "🇫🇴",
-  };
-
-  fans = Object.entries(fans).sort((a,b) => b[1] - a[1])
-  console.log("NIGEGRS",fans)
-  fans = fans.map( (entry) => {
-    if(isNaN(entry[1])){
-        return [entry[0], 1000]
-    } else {
-        return [entry[0], entry[1]]
-    }
-  }) 
-  
-  for (let country of fans) {
-    console.log(country)
-    if (country[0] === "total") continue;
-    let countryDiv = document.createElement("div");
-    countryDiv.classList.add("country-div")
-
-    let bar = document.createElement("span");
-    bar.style.width = `${country[1]/country[0][1] * 100 * .9}%`;
-    bar.classList.add("bar")
-
-    let label = document.createElement("span")
-    label.textContent = `${countryToFlag[country[0]] || country[0]}`
-
-    countryDiv.appendChild(bar)
-    countryDiv.appendChild(label)
-    spreadContainer.appendChild(countryDiv)
-}
-}
- */
-
 function updateFanSpread(fans) {
   let spreadContainer = document.querySelector(".spread-container");
   spreadContainer.innerHTML = "";
 
-  const list = fans.countries.sort( (a,b) => b.fans - a.fans )
+  spreadContainer.classList.toggle("active", 1);
+
+  const list = fans.countries.sort((a, b) => b.fans - a.fans);
 
   const countryToFlag = {
     USA: "🇺🇸",
@@ -261,14 +203,14 @@ function updateFanSpread(fans) {
     countryDiv.classList.add("country-div");
 
     let bar = document.createElement("span");
-    bar.style.width = `${entry.fans/fans.total * 100 * .9}%`;
-    bar.classList.add("bar")
+    bar.style.width = `${(entry.fans / fans.total) * 30}%`;
+    bar.classList.add("bar");
 
-    let label = document.createElement("span")
-    label.textContent = `${countryToFlag[entry.country] || entry.country}`
+    let label = document.createElement("span");
+    label.textContent = `${countryToFlag[entry.country] || entry.country}`;
 
-    countryDiv.appendChild(bar)
-    countryDiv.appendChild(label)
-    spreadContainer.appendChild(countryDiv)
+    countryDiv.appendChild(bar);
+    countryDiv.appendChild(label);
+    spreadContainer.appendChild(countryDiv);
   }
 }

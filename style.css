@@ -99,12 +99,16 @@ aside {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  width: 30%;
-  
+  width: 100%;
+  pointer-events: none;
 
   & .country-div {
     width: 100%;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
   }
+
 
   & .bar {
     display: inline-block;

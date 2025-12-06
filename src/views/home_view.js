@@ -127,6 +127,8 @@ export class HomeView {
       d3.selectAll(".genre-group").attr("opacity", 1.0);
 
       document.querySelector("aside").classList.toggle("active",0)
+      document.querySelector(".spread-container").innerHTML = ""
+
     });
 
     //use d3.timer to create a continuous animation

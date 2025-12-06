@@ -127,18 +127,22 @@ export async function bandInfoUpdate(selectedBand) {
   }
 
   let name = document.createElement("h2");
+  name.id = "aside-band-name";
   name.textContent = selectedBand.band_name;
 
   let originAndDate = document.createElement("p");
+  originAndDate.classList.add("aside-text");
   originAndDate.textContent = `${selectedBand.origin}, ${
     selectedBand.formed
   } - ${selectedBand.split === "-" ? "Present" : selectedBand.split}`;
 
   let genres = document.createElement("p");
+  genres.classList.add("aside-text");
   let genreStr = selectedBand.style.join(", ");
   genres.textContent = genreStr;
 
   let bio = document.createElement("p");
+  bio.classList.add("aside-text");
   bio.textContent = info.strBiographyEN;
 
   aside.appendChild(img);

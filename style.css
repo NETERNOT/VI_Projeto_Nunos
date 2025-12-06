@@ -188,6 +188,14 @@ canvas {
   font-size: 0.75rem;
 }
 
+#aside-band-name {
+  font-family: "BIZ UDMincho", serif;
+}
+
+.aside-text {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
 aside {
   position: absolute;
   top: 0;

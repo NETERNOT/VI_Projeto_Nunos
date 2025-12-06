@@ -78,7 +78,7 @@ id,band_name,fans,formed,origin,split,style
 76,Gamma Ray,898,1988,Germany,-,Power
 77,Rhapsody Of Fire,896,1993,Italy,1993,Symphonic power
 78,Hypocrisy,885,1990,Sweden,-,"Death,Melodic death,Gothenburg"
-79,Motörhead,875,1975,"United Kingdom, USA",1975,Heavy
+79,Motörhead,875,1975,"United Kingdom",1975,Heavy
 80,Bloodbath,872,1998,Sweden,-,Death
 81,Korpiklaani,864,2003,Finland,2003,Folk
 82,Manowar,863,1980,USA,-,"Heavy,Us power"
@@ -96,7 +96,7 @@ id,band_name,fans,formed,origin,split,style
 94,Satyricon,768,1990,Norway,-,Black
 95,Rush,767,1968,Canada,1968,Progressive rock
 96,Darkthrone,753,1986,Norway,-,"Death,Black,Crust punk ,Heavy"
-97,Ozzy Osbourne,750,1979,"United Kingdom, USA",1979,Heavy
+97,Ozzy Osbourne,750,1979,"United Kingdom",1979,Heavy
 98,Devin Townsend,747,1996,Canada,-,"Industrial progressive,Progressive"
 99,Alcest,734,2000,France,2000,"Black,Shoegaze"
 100,Equilibrium,729,2001,Germany,-,Viking folk
@@ -108,7 +108,7 @@ id,band_name,fans,formed,origin,split,style
 106,Turisas,672,1997,Finland,-,Folk
 107,Orphaned Land,662,1991,Israel,1991,"Progressive folk,Death,Folk"
 108,Apocalyptica,656,1993,Finland,-,Symphonic heavy
-109,King Diamond,641,1985,"Denmark, USA",1985,Heavy
+109,King Diamond,641,1985,"Denmark",1985,Heavy
 110,Angra,633,1991,Brazil,-,Progressive power
 111,Deicide,628,1987,USA,1987,Death
 112,Alice In Chains,627,1985,USA,-,"Grunge ,Heavy"
@@ -143,7 +143,7 @@ id,band_name,fans,formed,origin,split,style
 141,Evergrey,528,1996,Sweden,1996,"Progressive,Power"
 142,Týr,526,1998,Faroe Islands,-,Folk
 143,Type O Negative,526,1989,USA,1989,"Gothic,Doom"
-144,Mercyful Fate,525,1981,"Denmark, USA",-,"Heavy,First wave of black"
+144,Mercyful Fate,525,1981,"Denmark",-,"Heavy,First wave of black"
 145,Saturnus,522,1991,Denmark,1991,"Death,Gothic doom"
 146,Bolt Thrower,519,1986,United Kingdom,2016,"Death,Grindcore"
 147,Scorpions,519,1965,Germany,1965,"Progressive rock,Hard rock,Heavy"

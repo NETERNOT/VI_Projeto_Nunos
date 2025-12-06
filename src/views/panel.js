@@ -56,6 +56,14 @@ export function search(
           //clear genre spread when selecting a band
           document.querySelector(".spread-container").innerHTML = "";
 
+          const selectedPanel = document.getElementById("selected-panel");
+          const selectedPanelText = document.getElementById(
+            "selected-panel-text"
+          );
+
+          selectedPanel.style.display = "flex";
+          selectedPanelText.textContent = "Band: " + bandNode.band_name;
+
           bandInfoUpdate(bandNode);
           //mirror band click behavior: highlight this band and its genres; dim others
           for (let genre of genres) {
@@ -89,6 +97,14 @@ export function search(
         if (genreNode) {
           //clear band info aside when selecting a genre
           document.querySelector("aside").classList.toggle("active", 0);
+
+          const selectedPanel = document.getElementById("selected-panel");
+          const selectedPanelText = document.getElementById(
+            "selected-panel-text"
+          );
+
+          selectedPanel.style.display = "flex";
+          selectedPanelText.textContent = "Genre: " + genreNode.id;
 
           updateFanSpread(genreNode.fans);
           //mirror genre click behavior: highlight this genre and its bands; dim others

@@ -10,6 +10,7 @@ import { getSearchResults } from "../data/searchResults.js";
 import { getBandInfo } from "../data/getBandInfo.js";
 import { updateFanSpread } from "../nodes/handleClick.js";
 import { bandInfoUpdate } from "../nodes/handleClick.js";
+import { search } from "./panel.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -124,6 +125,8 @@ export class HomeView {
       selectedBand = null;
       selectedGenre = null;
 
+      document.getElementById("selected-panel").style.display = "none";
+
       //  document.getElementById("selected-band-text").textContent = "Band";
       //  document.getElementById("selected-genre-text").textContent = "Genre";
 
@@ -140,120 +143,15 @@ export class HomeView {
     const searchResults = document.getElementById("search-results");
 
     if (searchInput && searchResults) {
-      searchInput.addEventListener("input", async () => {
-        const query = searchInput.value.trim().toLowerCase();
-
-        if (query.length === 0) {
-          searchResults.innerHTML = "";
-          return;
-        }
-
-        const results = (await getSearchResults(
-          bandNodes,
-          this.genreData,
-          query
-        )) || {
-          bands: [],
-          genres: [],
-        };
-
-        //build results HTML
-        let resultsHtml = "";
-
-        if (results.bands && results.bands.length > 0) {
-          resultsHtml += "<h3>Bands</h3><ul id='search-band-list'>";
-          results.bands.forEach((band) => {
-            const bandId = band.id || band.name || "";
-            if (!bandId) return;
-            resultsHtml += `<li class="search-band-item" data-band-id="${bandId}">${bandId}</li>`;
-          });
-          resultsHtml += "</ul>";
-        }
-
-        if (results.genres && results.genres.length > 0) {
-          resultsHtml += "<h3>Genres</h3><ul id='search-genre-list'>";
-          results.genres.forEach((genre) => {
-            const genreId = genre.id || "";
-            if (!genreId) return;
-            resultsHtml += `<li class="search-genre-item" data-genre-id="${genreId}">${genreId}</li>`;
-          });
-          resultsHtml += "</ul>";
-        }
-
-        searchResults.innerHTML = resultsHtml;
-
-        //add click listeners to results
-        document.querySelectorAll(".search-band-item").forEach((item) => {
-          item.addEventListener("click", () => {
-            const bandId = item.getAttribute("data-band-id");
-            const bandNode = bandNodes.find(
-              (b) => b.id.toLowerCase() === bandId.toLowerCase()
-            );
-            if (bandNode) {
-              //clear genre spread when selecting a band
-              document.querySelector(".spread-container").innerHTML = "";
-
-              bandInfoUpdate(bandNode);
-              //mirror band click behavior: highlight this band and its genres; dim others
-              for (let genre of this.genreData) {
-                if (bandNode.style && bandNode.style.includes(genre.id)) {
-                  d3.selectAll(".genre-group")
-                    .filter((d) => d.id === genre.id)
-                    .attr("opacity", 1.0);
-                } else {
-                  d3.selectAll(".genre-group")
-                    .filter((d) => d.id === genre.id)
-                    .attr("opacity", 0.2);
-                }
-              }
-
-              d3.selectAll(".band-group").attr("opacity", (d) => {
-                if (d.id === bandNode.id) return 1.0;
-                return 0.2;
-              });
-            }
-            searchResults.innerHTML = "";
-            searchInput.value = "";
-          });
-        });
-
-        document.querySelectorAll(".search-genre-item").forEach((item) => {
-          item.addEventListener("click", () => {
-            const genreId = item.getAttribute("data-genre-id");
-            const genreNode = this.genreData.find(
-              (g) => g.id.toLowerCase() === genreId.toLowerCase()
-            );
-            if (genreNode) {
-              //clear band info aside when selecting a genre
-              document.querySelector("aside").classList.toggle("active", 0);
-
-              updateFanSpread(genreNode.fans);
-              //mirror genre click behavior: highlight this genre and its bands; dim others
-              for (let j = 0; j < bandNodes.length; j++) {
-                if (
-                  bandNodes[j].style &&
-                  bandNodes[j].style.includes(genreNode.id)
-                ) {
-                  d3.selectAll(".band-group")
-                    .filter((d) => d.id === bandNodes[j].id)
-                    .attr("opacity", 1.0);
-                } else {
-                  d3.selectAll(".band-group")
-                    .filter((d) => d.id === bandNodes[j].id)
-                    .attr("opacity", 0.2);
-                }
-              }
-
-              d3.selectAll(".genre-group").attr("opacity", (d) => {
-                if (d.id === genreNode.id) return 1.0;
-                return 0.2;
-              });
-            }
-            searchResults.innerHTML = "";
-            searchInput.value = "";
-          });
-        });
-      });
+      search(
+        bandNodes,
+        this.genreData,
+        searchInput,
+        searchResults,
+        getSearchResults,
+        bandInfoUpdate,
+        updateFanSpread
+      );
     }
 
     //use d3.timer to create a continuous animation

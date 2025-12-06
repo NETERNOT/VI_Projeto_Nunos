@@ -12,11 +12,15 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
         console.log(bandOrGenre);
 
         let selectedBand = band;
+        const selectedPanel = document.getElementById("selected-panel");
+        const selectedPanelText = document.getElementById(
+          "selected-panel-text"
+        );
 
-        //    const selectedBandText = document.getElementById("selected-band-text");
-        //    const selectedGenreText = document.getElementById("selected-genre-text");
-        //    selectedBandText.textContent = "Band: " + band.band_name;
-        //    selectedGenreText.textContent = "Genre";
+        if (bandOrGenre !== null) {
+          selectedPanel.style.display = "flex";
+          selectedPanelText.textContent = "Band: " + band.band_name;
+        }
 
         // Highlight genres of selected band
         for (let genre of genreData) {
@@ -59,11 +63,15 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
 
         let selectedGenre = genre;
 
-        // const selectedBandText = document.getElementById("selected-band-text");
-        // const selectedGenreText = document.getElementById( "selected-genre-text");
+        const selectedPanel = document.getElementById("selected-panel");
+        const selectedPanelText = document.getElementById(
+          "selected-panel-text"
+        );
 
-        // selectedGenreText.textContent = "Genre: " + genre.id;
-        // selectedBandText.textContent = "Band";
+        if (bandOrGenre !== null) {
+          selectedPanel.style.display = "flex";
+          selectedPanelText.textContent = "Genre: " + genre.id;
+        }
 
         // Highlight bands of selected genre
         for (let j = 0; j < bandNodes.length; j++) {

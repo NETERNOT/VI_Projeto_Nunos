@@ -142,7 +142,7 @@ canvas {
 }
 
 #buttons-panel {
-  width: 15%;
+  width: 20%;
   height: 2rem;
   display: flex;
   justify-content: space-evenly;
@@ -161,6 +161,31 @@ canvas {
 
 .genre-text {
   font-family: "BIZ UDMincho", serif;
+}
+
+#selected-panel {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.65);
+  position: fixed;
+  height: 1.5rem;
+  width: 60%;
+  bottom: 4.1rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  outline: 1px solid white;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+#eye-icon {
+  margin-top: 0.15rem;
+  width: 0.75rem;
+}
+
+#selected-panel-text {
+  font-family: "PP Fraktion Sans", sans-serif;
+  font-size: 0.75rem;
 }
 
 aside {

@@ -93,3 +93,22 @@ aside {
     padding: 0 1rem;
   }
 }
+
+
+.spread-container {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 30%;
+  
+
+  & .country-div {
+    width: 100%;
+  }
+
+  & .bar {
+    display: inline-block;
+    height: 1rem;
+    background-color: #ddd;
+  }
+}

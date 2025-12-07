@@ -1,4 +1,5 @@
 import { getBandInfo } from "../data/getBandInfo.js";
+import { renderAreaGraph } from "../views/timeline.js";
 
 export function handleClick(
   bandNodes,
@@ -55,6 +56,8 @@ export function handleClick(
           }
         });
 
+
+        renderAreaGraph(selectedBand, genreData)
         bandInfoUpdate(selectedBand);
       });
   }

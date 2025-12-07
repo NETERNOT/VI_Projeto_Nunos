@@ -52,10 +52,10 @@ export function extractGenres(data) {
     let fansByYear = [];
     for (let year = minDate; year < maxDate; year++) {
       let bandsInYear = dataCopy.filter(
-        (band) => band.origin <= year && year <= band.split
+        (band) => band.formed <= year && year <= band.split
       );
 
-      bandsInYear.filter((band)=>{
+      bandsInYear = bandsInYear.filter((band)=>{
         return band.style.includes(genre.id)
       })
 
@@ -75,5 +75,6 @@ export function extractGenres(data) {
     };
   });
   
+  console.log("genreData:", withFansByYear)
   return withFansByYear;
 }

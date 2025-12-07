@@ -157,12 +157,28 @@ export class HomeView {
       const filteredBands = applyBandFilters(bandNodes, filterSettings);
       const filteredBandIds = new Set(filteredBands.map((b) => b.id));
 
-      d3.selectAll(".band-group").attr("opacity", (d) => {
-        if (filteredBandIds.has(d.id)) {
-          return d.opacity !== undefined ? d.opacity : 0.7;
-        }
-        return 0;
-      });
+      //handle searchBy filter for bands
+      if (filterSettings.searchBy === "genres") {
+        //hide all bands if searchBy is "genres"
+        d3.selectAll(".band-group").attr("opacity", 0);
+      } else {
+        //show filtered bands if searchBy is "both" or "bands"
+        d3.selectAll(".band-group").attr("opacity", (d) => {
+          if (filteredBandIds.has(d.id)) {
+            return d.opacity !== undefined ? d.opacity : 0.7;
+          }
+          return 0;
+        });
+      }
+
+      //handle searchBy filter for genres
+      if (filterSettings.searchBy === "bands") {
+        //hide all genres if searchBy is "bands"
+        d3.selectAll(".genre-group").attr("opacity", 0);
+      } else {
+        //show all genres if searchBy is "both" or "genres"
+        d3.selectAll(".genre-group").attr("opacity", 1.0);
+      }
     };
 
     if (searchInput && searchResults) {
@@ -179,8 +195,13 @@ export class HomeView {
     }
 
     //update visibility when filters change
+    const searchByDropdown = document.getElementById("search-by-dropdown");
     const countrySelect = document.getElementById("country-select");
     const decadeSelect = document.getElementById("decade-select");
+
+    if (searchByDropdown) {
+      searchByDropdown.addEventListener("change", updateBandVisibility);
+    }
 
     if (countrySelect) {
       countrySelect.addEventListener("change", updateBandVisibility);

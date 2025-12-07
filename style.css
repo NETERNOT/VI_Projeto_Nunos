@@ -55,7 +55,7 @@ canvas {
 #control-panel {
   width: 30rem;
   padding: 0.5rem 1.25rem;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,7 +72,7 @@ canvas {
 }
 
 #search-results {
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.9);
   position: fixed;
   bottom: 3rem;
   width: 80%;
@@ -165,7 +165,7 @@ canvas {
 
 #selected-panel {
   display: none;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: black;
   position: fixed;
   height: 1.5rem;
   width: 60%;
@@ -196,7 +196,7 @@ canvas {
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: black;
   position: fixed;
   width: 80%;
   bottom: 4.1rem;

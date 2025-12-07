@@ -67,7 +67,7 @@ export function handleClick(
         //hide aside
         document.querySelector("aside").classList.toggle("active", 0);
 
-        console.log("Genre clickes countries: ", genre.fans.countries);
+        //console.log("Genre clickes countries: ", genre.fans.countries);
         updateFanSpread(genre.fans);
 
         let bandOrGenre = "genre";

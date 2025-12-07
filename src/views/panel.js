@@ -1,3 +1,28 @@
+//helper function to apply filters to bands
+export function applyBandFilters(bands, filterSettings) {
+  return bands.filter((band) => {
+    //filter by country if set
+    if (filterSettings.country) {
+      const bandCountry = (band.origin || "").trim().toLowerCase();
+      if (bandCountry !== filterSettings.country.toLowerCase()) {
+        return false;
+      }
+    }
+
+    //filter by decade if set
+    if (filterSettings.decade) {
+      const formed = parseInt(band.formed);
+      const decadeStart = filterSettings.decade;
+      const decadeEnd = decadeStart + 9;
+      if (!(formed >= decadeStart && formed <= decadeEnd)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
 export function search(
   bands,
   genres,
@@ -5,7 +30,8 @@ export function search(
   resultsInput,
   getSearchResults,
   bandInfoUpdate,
-  updateFanSpread
+  updateFanSpread,
+  filterSettings = { searchBy: "both", country: null, decade: null }
 ) {
   input.addEventListener("input", async () => {
     const query = input.value.trim().toLowerCase();
@@ -15,10 +41,22 @@ export function search(
       return;
     }
 
-    const results = (await getSearchResults(bands, genres, query)) || {
+    let results = (await getSearchResults(bands, genres, query)) || {
       bands: [],
       genres: [],
     };
+
+    //apply filters based on settings
+    if (filterSettings.searchBy === "bands") {
+      results.genres = [];
+    } else if (filterSettings.searchBy === "genres") {
+      results.bands = [];
+    }
+
+    //apply country and decade filters to search results
+    if (results.bands.length > 0) {
+      results.bands = applyBandFilters(results.bands, filterSettings);
+    }
 
     //build results HTML
     let resultsHtml = "";
@@ -132,12 +170,89 @@ export function search(
   });
 }
 
-export function settings(type) {
+export function settings(bands, genres, search) {
   const settingsPanel = document.getElementById("settings-panel");
   const settingsButton = document.getElementById("settings-button");
+
+  //filter settings object (shared reference)
+  const filterSettings = {
+    searchBy: "both",
+    country: null,
+    decade: null,
+  };
 
   settingsButton.addEventListener("click", () => {
     settingsPanel.style.display =
       settingsPanel.style.display === "flex" ? "none" : "flex";
   });
+
+  //search by filter
+  const searchByDropdown = document.getElementById("search-by-dropdown");
+  if (searchByDropdown) {
+    searchByDropdown.addEventListener("change", (e) => {
+      filterSettings.searchBy = e.target.value;
+      console.log("Search by updated:", filterSettings.searchBy);
+    });
+  }
+
+  //country filter - build dropdown from bands data
+  const countrySelect = document.getElementById("country-select");
+  if (countrySelect) {
+    const countries = [
+      ...new Set(bands.map((b) => (b.origin || "").trim()).filter(Boolean)),
+    ].sort();
+
+    //clear existing options (except the first placeholder)
+    while (countrySelect.options.length > 1) {
+      countrySelect.remove(1);
+    }
+
+    //add country options
+    countries.forEach((country) => {
+      const option = document.createElement("option");
+      option.value = country;
+      option.textContent = country;
+      countrySelect.appendChild(option);
+    });
+
+    countrySelect.addEventListener("change", (e) => {
+      filterSettings.country = e.target.value || null;
+      console.log("Country filter updated:", filterSettings.country);
+    });
+  }
+
+  //decade filter - build dropdown from bands data
+  const decadeSelect = document.getElementById("decade-select");
+  if (decadeSelect) {
+    const decades = [
+      ...new Set(
+        bands
+          .map((b) => {
+            const year = parseInt(b.formed);
+            return Math.floor(year / 10) * 10;
+          })
+          .filter((d) => !isNaN(d))
+      ),
+    ].sort((a, b) => a - b);
+
+    //clear existing options (except the first placeholder)
+    while (decadeSelect.options.length > 1) {
+      decadeSelect.remove(1);
+    }
+
+    //add decade options
+    decades.forEach((decade) => {
+      const option = document.createElement("option");
+      option.value = decade;
+      option.textContent = `${decade}s`;
+      decadeSelect.appendChild(option);
+    });
+
+    decadeSelect.addEventListener("change", (e) => {
+      filterSettings.decade = e.target.value ? parseInt(e.target.value) : null;
+      console.log("Decade filter updated:", filterSettings.decade);
+    });
+  }
+
+  return filterSettings;
 }

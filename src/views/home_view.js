@@ -10,8 +10,7 @@ import { getSearchResults } from "../data/searchResults.js";
 import { getBandInfo } from "../data/getBandInfo.js";
 import { updateFanSpread } from "../nodes/handleClick.js";
 import { bandInfoUpdate } from "../nodes/handleClick.js";
-import { search } from "./panel.js";
-import { settings } from "./panel.js";
+import { search, settings, applyBandFilters } from "./panel.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -143,6 +142,22 @@ export class HomeView {
     const searchInput = document.getElementById("search-bar");
     const searchResults = document.getElementById("search-results");
 
+    //initialize settings and get filter settings object
+    const filterSettings = settings(bandNodes, this.genreData, search);
+
+    //function to update visibility of bands based on filters
+    const updateBandVisibility = () => {
+      const filteredBands = applyBandFilters(bandNodes, filterSettings);
+      const filteredBandIds = new Set(filteredBands.map((b) => b.id));
+
+      d3.selectAll(".band-group").attr("opacity", (d) => {
+        if (filteredBandIds.has(d.id)) {
+          return d.opacity !== undefined ? d.opacity : 0.7;
+        }
+        return 0;
+      });
+    };
+
     if (searchInput && searchResults) {
       search(
         bandNodes,
@@ -151,12 +166,21 @@ export class HomeView {
         searchResults,
         getSearchResults,
         bandInfoUpdate,
-        updateFanSpread
+        updateFanSpread,
+        filterSettings
       );
     }
 
-    //SETTINGS PANEL FUNCTIONALITY
-    settings(0);
+    //update visibility when filters change
+    const countrySelect = document.getElementById("country-select");
+    const decadeSelect = document.getElementById("decade-select");
+
+    if (countrySelect) {
+      countrySelect.addEventListener("change", updateBandVisibility);
+    }
+    if (decadeSelect) {
+      decadeSelect.addEventListener("change", updateBandVisibility);
+    }
 
     //use d3.timer to create a continuous animation
     const info = {

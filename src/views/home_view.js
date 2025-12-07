@@ -115,8 +115,18 @@ export class HomeView {
     let selectedBand = null;
     let selectedGenre = null;
 
+    //initialize settings and get filter settings object
+    const filterSettings = settings(bandNodes, this.genreData, search);
+
     //add click interaction to display selected band and genre
-    handleClick(bandNodes, bandCircles, circles, this.genreData);
+    handleClick(
+      bandNodes,
+      bandCircles,
+      circles,
+      this.genreData,
+      filterSettings,
+      applyBandFilters
+    );
     handleHover(bandCircles);
 
     //reset button functionality
@@ -141,9 +151,6 @@ export class HomeView {
     //SEARCH FUNCTIONALITY
     const searchInput = document.getElementById("search-bar");
     const searchResults = document.getElementById("search-results");
-
-    //initialize settings and get filter settings object
-    const filterSettings = settings(bandNodes, this.genreData, search);
 
     //function to update visibility of bands based on filters
     const updateBandVisibility = () => {

@@ -1,6 +1,13 @@
 import { getBandInfo } from "../data/getBandInfo.js";
 
-export function handleClick(bandNodes, bandCircles, circles, genreData) {
+export function handleClick(
+  bandNodes,
+  bandCircles,
+  circles,
+  genreData,
+  filterSettings = null,
+  applyBandFilters = null
+) {
   // Band click handler
   for (let band of bandNodes) {
     bandCircles
@@ -39,6 +46,11 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
           if (selectedBand && d.id === selectedBand.id) {
             return 1.0;
           } else if (selectedBand) {
+            //check if this band should be visible based on filters
+            if (filterSettings && applyBandFilters) {
+              const filteredBands = applyBandFilters([d], filterSettings);
+              return filteredBands.length > 0 ? 0.2 : 0;
+            }
             return 0.2;
           }
         });
@@ -80,9 +92,16 @@ export function handleClick(bandNodes, bandCircles, circles, genreData) {
               .filter((d) => d.id === bandNodes[j].id)
               .attr("opacity", 1.0);
           } else {
+            //check if this band should be visible based on filters
+            const opacity =
+              filterSettings &&
+              applyBandFilters &&
+              applyBandFilters([bandNodes[j]], filterSettings).length > 0
+                ? 0.2
+                : 0;
             d3.selectAll(".band-group")
               .filter((d) => d.id === bandNodes[j].id)
-              .attr("opacity", 0.2);
+              .attr("opacity", opacity);
           }
         }
 

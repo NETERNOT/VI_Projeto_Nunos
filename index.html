@@ -1,56 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Visualizing Metal Bands</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho&display=swap"
-      rel="stylesheet"
-    />
+  <title>Visualizing Metal Bands</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho&display=swap" rel="stylesheet" />
 
-    <script src="libraries/d3.min.js"></script>
-  </head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
 
-  <body>
-    <div id="main-container">
-      <div id="control-panel">
-        <div id="selected-panel">
-          <img id="eye-icon" src="public/assets/icons/eye.svg">
-          <p id="selected-panel-text"></p>
-        </div>
-        <div id="central-panel">
-          <input type="text" placeholder="Search..." id="search-bar">
-          
-        </input>
-          <div id="buttons-panel">
-            <button class="button" id="settings-button">
-              <img class="icon" src="public/assets/icons/settings.svg" />
-            </button>
-            <button class="button" id="reset-button">
-              <img class="icon" src="public/assets/icons/reset.svg" />
-            </button>
+  <script src="libraries/d3.min.js"></script>
+</head>
+
+<body>
+  <div id="main-container">
+    <div id="control-panel">
+
+      <div id="settings-panel">
+        <div id="general-settings" class="settings-change">
+          <h3>General</h3>
+          <div class="setting-container">
+            <p>Search by:</p>
+            <select class="select-settings" id="search-by-dropdown">
+              <option value="both">Both</option>
+              <option value="bands">Bands</option>
+              <option value="genres">Genres</option>
+            </select>
           </div>
         </div>
-          <ul id="search-results">
-        </ul>
+
+          <div id="band-settings" class="settings-change">
+          <h3>Band</h3>
+          <div class="setting-container">
+            <p>Country:</p>
+            <select class="select-settings" id="select-country">
+              <option value="USA">USA</option>
+            </select>
+          </div>
+            <div class="setting-container">
+            <p>Decade:</p>
+            <select class="select-settings" id="select-decade">
+              <option value="1970">1970</option>
+            </select>
+          </div>
+        </div>
+        <div id="band-settings" class="settings-change"></div>
+
       </div>
+
+
+      <div id="selected-panel">
+        <img id="eye-icon" src="public/assets/icons/eye.svg">
+        <p id="selected-panel-text"></p>
+      </div>
+      <div id="central-panel">
+        <input type="text" placeholder="Search..." id="search-bar">
+
+        </input>
+        <div id="buttons-panel">
+          <button class="button" id="settings-button">
+            <img class="icon" src="public/assets/icons/settings.svg" />
+          </button>
+          <button class="button" id="reset-button">
+            <img class="icon" src="public/assets/icons/reset.svg" />
+          </button>
+        </div>
+      </div>
+      <ul id="search-results">
+      </ul>
     </div>
+  </div>
 
-    <aside></aside>
+  <aside></aside>
 
-    <div class="spread-container"></div>
+  <div class="spread-container"></div>
 
-    <div id="timelineContainer"></div>
+  <div id="timelineContainer"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-    <script type="module" src="src/main.js"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+
 </html>

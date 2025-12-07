@@ -11,6 +11,7 @@ import { getBandInfo } from "../data/getBandInfo.js";
 import { updateFanSpread } from "../nodes/handleClick.js";
 import { bandInfoUpdate } from "../nodes/handleClick.js";
 import { search } from "./panel.js";
+import { settings } from "./panel.js";
 
 export class HomeView {
   constructor(container, rawData, genreData) {
@@ -153,6 +154,9 @@ export class HomeView {
         updateFanSpread
       );
     }
+
+    //SETTINGS PANEL FUNCTIONALITY
+    settings(0);
 
     //use d3.timer to create a continuous animation
     const info = {

@@ -131,3 +131,13 @@ export function search(
     });
   });
 }
+
+export function settings(type) {
+  const settingsPanel = document.getElementById("settings-panel");
+  const settingsButton = document.getElementById("settings-button");
+
+  settingsButton.addEventListener("click", () => {
+    settingsPanel.style.display =
+      settingsPanel.style.display === "flex" ? "none" : "flex";
+  });
+}

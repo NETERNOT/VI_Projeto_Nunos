@@ -7,16 +7,17 @@ export function renderAreaGraph(band, genreData) {
   const container = document.querySelector("#areaGraph");
   container.innerHTML = "";
 
-  const tooltip = d3.select("#areaLabel") // or a specific container
-  .append("div")
-  .attr("class", "tooltip")
-  .style("position", "absolute")
-  .style("padding", "5px 10px")
-  .style("background", "rgba(0,0,0,0.7)")
-  .style("color", "#fff")
-  .style("border-radius", "4px")
-  .style("pointer-events", "none")
-  .style("opacity", 0);
+  const tooltip = d3
+    .select("#areaLabel") // or a specific container
+    .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("padding", "5px 10px")
+    .style("background", "rgba(0,0,0,0.7)")
+    .style("color", "#fff")
+    .style("border-radius", "4px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
 
   // -------------------------------
   // 1) Layout variables
@@ -96,49 +97,39 @@ export function renderAreaGraph(band, genreData) {
       .attr("stroke", "#ddd")
       .attr("stroke-width", 1)
       .on("mouseover", (event) => {
-      tooltip.transition().duration(100).style("opacity", 1);
-      tooltip.html(`<strong>${genre.id}</strong>`);
-    })
-    .on("mousemove", (event) => {
-      tooltip
-        .style("left", event.pageX + 10 + "px")
-        .style("top", event.pageY - 25 + "px");
-    })
-    .on("mouseout", () => {
-      tooltip.transition().duration(200).style("opacity", 0);
-    });
-});
-
-
+        tooltip.transition().duration(100).style("opacity", 1);
+        tooltip.html(`<strong class="timeline-genre-id">${genre.id}</strong>`);
+      })
+      .on("mousemove", (event) => {
+        tooltip
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 25 + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.transition().duration(200).style("opacity", 0);
+      });
+  });
 
   // -------------------------------
-// 7) Optional: Axes (simple, minimal)
-// -------------------------------
-const xAxisGenerator = d3.axisBottom(xScale);
-const yAxisGenerator = d3.axisLeft(yScale);
+  // 7) Optional: Axes (simple, minimal)
+  // -------------------------------
+  const xAxisGenerator = d3.axisBottom(xScale);
+  const yAxisGenerator = d3.axisLeft(yScale);
 
-chartGroup
-  .append('g')
-  .attr("class", "x-axis")
-  .attr('transform', `translate(0, ${innerHeight})`)
-  .call(xAxisGenerator);
+  chartGroup
+    .append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0, ${innerHeight})`)
+    .call(xAxisGenerator);
 
-chartGroup
-  .append('g')
-.attr("class", "y-axis")
-  .call(yAxisGenerator);
-
-
+  chartGroup.append("g").attr("class", "y-axis").call(yAxisGenerator);
 
   // X axis color
-chartGroup.selectAll(".x-axis path, .x-axis line")
-  .attr("stroke", "#ddd");
+  chartGroup.selectAll(".x-axis path, .x-axis line").attr("stroke", "#ddd");
 
-// Y axis color
-chartGroup.selectAll(".y-axis path, .y-axis line")
-  .attr("stroke", "#ddd");
+  // Y axis color
+  chartGroup.selectAll(".y-axis path, .y-axis line").attr("stroke", "#ddd");
 
-// Tick labels
-chartGroup.selectAll(".x-axis text, .y-axis text")
-  .attr("fill", "#ddd");
+  // Tick labels
+  chartGroup.selectAll(".x-axis text, .y-axis text").attr("fill", "#ddd");
 }

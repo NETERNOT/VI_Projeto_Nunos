@@ -17,7 +17,7 @@
   font-style: normal;
 }
 
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -74,7 +74,7 @@ canvas {
   text-align: center;
   outline: 1px solid white;
 
-  transition: all .5s ease;
+  transition: all 0.5s ease;
 }
 
 #search-results {
@@ -242,6 +242,22 @@ canvas {
   font-family: "PP Fraktion Sans", sans-serif;
 }
 
+#infoContainer-band-name {
+  font-family: "BIZ UDMincho", serif;
+}
+
+.infoContainer-text {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
+.tick {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
+.timeline-genre-id {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
 aside {
   position: absolute;
   top: 0;
@@ -262,13 +278,13 @@ aside {
     }
   }
 
-  & .bandInfo{
+  & .bandInfo {
     width: 100%;
 
-    &>h2, &>p{
+    & > h2,
+    & > p {
       padding: 0 1rem;
     }
-    
   }
 
   & #back-arrow {
@@ -285,8 +301,6 @@ aside {
     aspect-ratio: 16/9;
     object-fit: cover;
   }
-
-
 }
 
 .spread-container {
@@ -310,8 +324,7 @@ aside {
   }
 }
 
-
-#areaGraph{
+#areaGraph {
   z-index: 1000;
   max-width: 100%;
   aspect-ratio: 16/9;
@@ -319,17 +332,16 @@ aside {
   padding: 1rem;
 }
 
-#arealabel{
+#arealabel {
   z-index: 10001;
 }
 
-body.aside-open{
-
-  & aside{
+body.aside-open {
+  & aside {
     left: 60%;
   }
 
-  & #control-panel{
+  & #control-panel {
     left: 30%;
   }
 }

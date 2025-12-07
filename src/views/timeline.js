@@ -1,7 +1,9 @@
 export function renderAreaGraph(band, genreData) {
+    //Filter genres by selectedBand
+
   const filteredGenres = genreData.filter((genre) =>
     band.style.includes(genre.id)
-  );
+  ).sort((a,b) => b.fans.total - a.fans.total);
 
   // 0) Container selection
   const container = document.querySelector("#areaGraph");
@@ -28,8 +30,8 @@ export function renderAreaGraph(band, genreData) {
   const margin = {
     top: 20,
     right: 20,
-    bottom: 30,
-    left: 40,
+    bottom: 40,
+    left: 60,
   };
 
   const innerWidth = svgWidth - margin.left - margin.right;
@@ -84,7 +86,6 @@ export function renderAreaGraph(band, genreData) {
   // 6) Draw the area
   // -------------------------------
 
-  //Filter genres by selectedBand
 
   filteredGenres.forEach((genre, i) => {
     chartGroup
@@ -113,8 +114,8 @@ export function renderAreaGraph(band, genreData) {
   // -------------------------------
   // 7) Optional: Axes (simple, minimal)
   // -------------------------------
-  const xAxisGenerator = d3.axisBottom(xScale);
-  const yAxisGenerator = d3.axisLeft(yScale);
+  const xAxisGenerator = d3.axisBottom(xScale).tickFormat(d3.format("d"));
+  const yAxisGenerator = d3.axisLeft(yScale).tickFormat(d => `${d}K`);
 
   chartGroup
     .append("g")
@@ -123,6 +124,26 @@ export function renderAreaGraph(band, genreData) {
     .call(xAxisGenerator);
 
   chartGroup.append("g").attr("class", "y-axis").call(yAxisGenerator);
+
+  chartGroup
+  .append("text")
+  .attr("class", "x-axis-label")
+  .attr("x", innerWidth / 2)
+  .attr("y", innerHeight + margin.bottom - 5)
+  .attr("text-anchor", "middle")
+  .attr("fill", "#ddd")
+  .text("Year");
+
+// Y axis label (Fans)
+chartGroup
+  .append("text")
+  .attr("class", "y-axis-label")
+  .attr("transform", "rotate(-90)")
+  .attr("x", -innerHeight / 2)
+  .attr("y", -margin.left + 12)
+  .attr("text-anchor", "middle")
+  .attr("fill", "#ddd")
+  .text("Fans");
 
   // X axis color
   chartGroup.selectAll(".x-axis path, .x-axis line").attr("stroke", "#ddd");

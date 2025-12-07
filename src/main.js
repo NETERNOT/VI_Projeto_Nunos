@@ -3,6 +3,10 @@ import { BandView } from "./views/band_view.js";
 import { GenreView } from "./views/genre_view.js";
 import { rawDataPromise, genresListPromise } from "./data/index.js";
 
+document.getElementById("back-arrow").addEventListener(("click"), ()=>{
+  document.body.classList.toggle("aside-open")
+});
+
 class ViewController {
   constructor() {
     //initialize variables as null to get the content later

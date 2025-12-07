@@ -57,8 +57,9 @@ export function handleClick(
         });
 
 
-        renderAreaGraph(selectedBand, genreData)
         bandInfoUpdate(selectedBand);
+        renderAreaGraph(selectedBand, genreData)
+
       });
   }
 
@@ -68,7 +69,7 @@ export function handleClick(
       .filter((d) => d.id === genre.id)
       .on("click", function () {
         //hide aside
-        document.querySelector("aside").classList.toggle("active", 0);
+        document.body.classList.toggle("aside-open", 0);
 
         //console.log("Genre clickes countries: ", genre.fans.countries);
         updateFanSpread(genre.fans);
@@ -120,9 +121,9 @@ export function handleClick(
 }
 
 export async function bandInfoUpdate(selectedBand) {
-  const aside = document.querySelector("aside");
+        const infoContainer = document.querySelector("aside>.bandInfo");
+      infoContainer.innerHTML = "";
 
-  clearBandInfo(aside);
 
   const info = await getBandInfo(selectedBand.band_name);
 
@@ -149,47 +150,33 @@ export async function bandInfoUpdate(selectedBand) {
   }
 
   let name = document.createElement("h2");
-  name.id = "aside-band-name";
+  name.id = "infoContainer-band-name";
   name.textContent = selectedBand.band_name;
 
   let originAndDate = document.createElement("p");
-  originAndDate.classList.add("aside-text");
+  originAndDate.classList.add("infoContainer-text");
   originAndDate.textContent = `${selectedBand.origin}, ${
     selectedBand.formed
   } - ${selectedBand.split === "-" ? "Present" : selectedBand.split}`;
 
   let genres = document.createElement("p");
-  genres.classList.add("aside-text");
+  genres.classList.add("infoContainer-text");
   let genreStr = selectedBand.style.join(", ");
   genres.textContent = genreStr;
 
   let bio = document.createElement("p");
-  bio.classList.add("aside-text");
+  bio.classList.add("infoContainer-text");
   bio.textContent = info.strBiographyEN;
 
-  aside.appendChild(img);
-  aside.appendChild(name);
-  aside.appendChild(originAndDate);
-  aside.appendChild(genres);
-  aside.appendChild(bio);
+  infoContainer.appendChild(img);
+  infoContainer.appendChild(name);
+  infoContainer.appendChild(originAndDate);
+  infoContainer.appendChild(genres);
+  infoContainer.appendChild(bio);
 
-  aside.classList.toggle("active", 1);
+  document.body.classList.toggle("aside-open", 1);
 }
 
-function clearBandInfo(aside) {
-  //clear all content
-  aside.innerHTML = "";
-
-  //add back arrow
-  let backArrow = document.createElement("div");
-  backArrow.id = "back-arrow";
-  backArrow.textContent = "<-";
-  backArrow.addEventListener("click", () => {
-    aside.classList.toggle("active", 0);
-  });
-
-  aside.appendChild(backArrow);
-}
 
 export function updateFanSpread(fans) {
   let spreadContainer = document.querySelector(".spread-container");

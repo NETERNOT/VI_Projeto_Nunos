@@ -33,7 +33,7 @@
           </div>
         </div>
 
-          <div id="band-settings" class="settings-change">
+        <div id="band-settings" class="settings-change">
           <h3>Band</h3>
           <div class="setting-container">
             <p>Country:</p>
@@ -41,7 +41,7 @@
               <option value="">All</option>
             </select>
           </div>
-            <div class="setting-container">
+          <div class="setting-container">
             <p>Decade:</p>
             <select class="select-settings" id="decade-select">
               <option value="">All</option>
@@ -75,11 +75,14 @@
     </div>
   </div>
 
-  <aside></aside>
+  <aside>
+    <div id="back-arrow">&lt;-</div>
+    <div class="bandInfo"></div>
+    <div id="areaGraph"></div>
+  </aside>
 
   <div class="spread-container"></div>
 
-  <div id="areaGraph"></div>
   <p id="areaLabel"></p>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>

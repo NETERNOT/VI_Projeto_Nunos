@@ -21,8 +21,8 @@ export function renderAreaGraph(band, genreData) {
   // -------------------------------
   // 1) Layout variables
   // -------------------------------
-  const svgWidth = container.clientWidth;
-  const svgHeight = container.clientHeight;
+  const svgWidth = container.clientWidth - 32;
+  const svgHeight = container.clientHeight - 32;
 
   const margin = {
     top: 20,

@@ -288,7 +288,7 @@ aside {
   }
 
   & #back-arrow {
-    position: absolute;
+    position: sticky;
     top: 2rem;
     line-height: 0;
     font-size: 2rem;
@@ -325,7 +325,6 @@ aside {
 }
 
 #areaGraph {
-  z-index: 1000;
   max-width: 100%;
   aspect-ratio: 16/9;
   pointer-events: hover;

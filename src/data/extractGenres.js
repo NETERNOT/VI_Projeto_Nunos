@@ -46,11 +46,11 @@ export function extractGenres(data) {
   }));
 
   const minDate = Math.min(...dataCopy.map((band) => parseInt(band.formed)));
-  const maxDate = Math.max(...dataCopy.map((band) => parseInt(band.split)));
+  const maxDate = 2017;
 
   const withFansByYear = withRadius.map((genre) => {
     let fansByYear = [];
-    for (let year = minDate; year < maxDate; year++) {
+    for (let year = minDate; year <= maxDate; year++) {
       let bandsInYear = dataCopy.filter(
         (band) => band.formed <= year && year <= band.split
       );

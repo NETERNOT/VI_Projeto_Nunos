@@ -86,6 +86,11 @@ canvas {
   padding-right: 1rem;
   max-height: 400px;
   overflow-y: auto;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 
 #search-results li {

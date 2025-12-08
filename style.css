@@ -199,6 +199,26 @@ canvas {
   font-size: 0.75rem;
 }
 
+#about-button {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  position: fixed;
+  left: 31%;
+  bottom: 7.5%;
+  transform: translateX(-50%);
+  border: 1px solid white;
+  border-radius: 1.5rem;
+  padding: 0.5rem 1rem;
+  font-family: "PP Fraktion Sans", sans-serif;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.5s ease;
+}
+
+#about-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 #settings-panel {
   display: none;
   border-top-left-radius: 1rem;
@@ -268,7 +288,53 @@ canvas {
   font-family: "PP Fraktion Sans", sans-serif;
 }
 
-aside {
+#projectInfoAside {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  width: 40%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #000;
+  color: #fff;
+  transition: all 0.5s ease;
+
+  & #right-arrow {
+    position: sticky;
+    top: 2rem;
+    margin-left: 89%;
+    line-height: 0;
+    font-size: 2rem;
+    cursor: pointer;
+    padding-left: 1rem;
+  }
+
+  & .projectInfo {
+    width: 100%;
+    margin-top: 4rem;
+
+    & > h3 {
+      padding: 0 1rem;
+      font-size: 1.4rem;
+      font-family: "BIZ UDMincho", serif;
+    }
+
+    & > p {
+      padding: 0 1rem;
+      font-family: "PP Fraktion Sans", sans-serif;
+    }
+  }
+
+  &.active {
+    right: 60%;
+
+    & #right-arrow {
+      position: sticky;
+    }
+  }
+}
+
+#bandInfoAside {
   position: absolute;
   top: 0;
   left: 100%;
@@ -348,14 +414,4 @@ aside {
 
 #arealabel {
   z-index: 10001;
-}
-
-body.aside-open {
-  & aside {
-    left: 60%;
-  }
-
-  & #control-panel {
-    left: 30%;
-  }
 }

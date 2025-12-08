@@ -9,7 +9,7 @@ export function handleClick(
   filterSettings = null,
   applyBandFilters = null
 ) {
-  // Band click handler
+  //band click handler
   for (let band of bandNodes) {
     bandCircles
       .filter((d) => d.id === band.id)
@@ -30,7 +30,7 @@ export function handleClick(
           selectedPanelText.textContent = "Band: " + band.band_name;
         }
 
-        // Highlight genres of selected band
+        //highlight genres of selected band
         for (let genre of genreData) {
           if (band.style.includes(genre.id)) {
             d3.selectAll(".genre-group")
@@ -63,13 +63,14 @@ export function handleClick(
       });
   }
 
-  // Genre click handler
+  //genre click handler
   for (let genre of genreData) {
     circles
       .filter((d) => d.id === genre.id)
       .on("click", function () {
         //hide aside
-        document.body.classList.toggle("aside-open", 0);
+        const bandAside = document.getElementById("bandInfoAside");
+        bandAside.classList.remove("active");
 
         //console.log("Genre clickes countries: ", genre.fans.countries);
         updateFanSpread(genre.fans);
@@ -89,7 +90,7 @@ export function handleClick(
           selectedPanelText.textContent = "Genre: " + genre.id;
         }
 
-        // Highlight bands of selected genre
+        //highlight bands of selected genre
         for (let j = 0; j < bandNodes.length; j++) {
           if (bandNodes[j].style.includes(genre.id)) {
             d3.selectAll(".band-group")
@@ -121,7 +122,13 @@ export function handleClick(
 }
 
 export async function bandInfoUpdate(selectedBand) {
-  const infoContainer = document.querySelector("aside>.bandInfo");
+  const infoContainer = document.querySelector("#bandInfoAside>.bandInfo");
+
+  if (!infoContainer) {
+    console.error("bandInfo container not found");
+    return;
+  }
+
   infoContainer.innerHTML = "";
 
   const info = await getBandInfo(selectedBand.band_name);
@@ -173,7 +180,8 @@ export async function bandInfoUpdate(selectedBand) {
   infoContainer.appendChild(genres);
   infoContainer.appendChild(bio);
 
-  document.body.classList.toggle("aside-open", 1);
+  const bandAside = document.getElementById("bandInfoAside");
+  bandAside.classList.add("active");
 }
 
 export function updateFanSpread(fans) {

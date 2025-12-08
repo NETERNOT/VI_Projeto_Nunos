@@ -5,21 +5,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Visualizing Metal Bands</title>
+  <title>Visualizing Metal</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" type="image/x-icon" href="public/assets/skulls/s_still_fire_4.svg">
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" type="text/css" href="style.css" />
 
   <script src="libraries/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 </head>
 
 <body>
+
+
+   <aside id="projectInfoAside">
+    <div id="right-arrow">→</div>
+    <div class="projectInfo">
+          <h3>About</h3>
+          <p> "Visualizing Metal" is a data visualization project whose objetive is to identify the relationships between Metal bands and Metal genres. </p>
+          <p>Authors: Nuno Flórido & Nuno Pinto</p>
+          <p>MDM @ FCTUC 2025/2026</p>
+         </div>
+  </aside>  
+
+
   <div id="main-container">
     <div id="control-panel">
-
       <div id="settings-panel">
         <div id="general-settings" class="settings-change">
           <h3>General</h3>
@@ -73,22 +88,22 @@
       <ul id="search-results">
       </ul>
     </div>
+    
+    <button id="about-button">Info</button>
   </div>
 
-  <aside>
-    <div id="back-arrow">&lt;-</div>
+  <aside id="bandInfoAside">
+    <div id="back-arrow">←</div>
     <div class="bandInfo"></div>
           <h3>Popularity Chart</h3>
     <div id="areaGraph">
     </div>
-  </aside>
+  </aside>  
 
   <div class="spread-container"></div>
 
   <p id="areaLabel"></p>
 
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
   <script type="module" src="src/main.js"></script>
 </body>
 

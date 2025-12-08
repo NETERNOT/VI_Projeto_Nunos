@@ -3,8 +3,19 @@ import { BandView } from "./views/band_view.js";
 import { GenreView } from "./views/genre_view.js";
 import { rawDataPromise, genresListPromise } from "./data/index.js";
 
-document.getElementById("back-arrow").addEventListener(("click"), ()=>{
-  document.body.classList.toggle("aside-open")
+document.getElementById("back-arrow").addEventListener("click", () => {
+  const bandAside = document.getElementById("bandInfoAside");
+  bandAside.classList.remove("active");
+});
+
+document.getElementById("about-button").addEventListener("click", () => {
+  const projectAside = document.getElementById("projectInfoAside");
+  projectAside.classList.add("active");
+});
+
+document.getElementById("right-arrow").addEventListener("click", () => {
+  const projectAside = document.getElementById("projectInfoAside");
+  projectAside.classList.remove("active");
 });
 
 class ViewController {
@@ -33,7 +44,11 @@ class ViewController {
     console.log("Raw Data loaded:", this.rawData.length, "records");
 
     this.genreData = await genresListPromise;
-    console.log("Genre Data loaded:", Object.keys(this.genreData).length, "genres");
+    console.log(
+      "Genre Data loaded:",
+      Object.keys(this.genreData).length,
+      "genres"
+    );
   }
 
   //function to render and switch between views
@@ -46,7 +61,11 @@ class ViewController {
     //create new view
     switch (viewName) {
       case "home_view":
-        this.currentView = new HomeView(this.container, this.rawData, this.genreData);
+        this.currentView = new HomeView(
+          this.container,
+          this.rawData,
+          this.genreData
+        );
         break;
       case "band_view":
         this.currentView = new BandView(this.container, this.rawData);

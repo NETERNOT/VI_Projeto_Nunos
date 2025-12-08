@@ -234,6 +234,11 @@ canvas {
   outline: inherit;
 }
 
+.x-axis-label,
+.y-axis-label {
+  font-family: "PP Fraktion Sans", sans-serif;
+}
+
 #aside-band-name {
   font-family: "BIZ UDMincho", serif;
 }
@@ -300,6 +305,11 @@ aside {
     width: 100%;
     aspect-ratio: 16/9;
     object-fit: cover;
+  }
+
+  & h3 {
+    padding-left: 1rem;
+    font-family: "PP Fraktion Sans", sans-serif;
   }
 }
 

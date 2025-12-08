@@ -1,3 +1,5 @@
+import { renderAreaGraph } from "./timeline.js";
+
 //helper function to apply filters to bands
 export function applyBandFilters(bands, filterSettings) {
   return bands.filter((band) => {
@@ -102,6 +104,7 @@ export function search(
           selectedPanel.style.display = "flex";
           selectedPanelText.textContent = "Band: " + bandNode.band_name;
 
+          renderAreaGraph(bandNode, genres);
           bandInfoUpdate(bandNode);
           //mirror band click behavior: highlight this band and its genres; dim others
           for (let genre of genres) {

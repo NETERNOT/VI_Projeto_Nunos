@@ -160,24 +160,33 @@ export class HomeView {
       //handle searchBy filter for bands
       if (filterSettings.searchBy === "genres") {
         //hide all bands if searchBy is "genres"
-        d3.selectAll(".band-group").attr("opacity", 0);
+        d3.selectAll(".band-group").attr("opacity", 0).attr("display", "none");
       } else {
         //show filtered bands if searchBy is "both" or "bands"
-        d3.selectAll(".band-group").attr("opacity", (d) => {
-          if (filteredBandIds.has(d.id)) {
-            return d.opacity !== undefined ? d.opacity : 0.7;
-          }
-          return 0;
-        });
+        d3.selectAll(".band-group")
+          .attr("opacity", (d) => {
+            if (filteredBandIds.has(d.id)) {
+              return d.opacity !== undefined ? d.opacity : 0.7;
+            }
+            return 0;
+          })
+          .attr("display", (d) => {
+            if (filteredBandIds.has(d.id)) {
+              return "block";
+            }
+            return "none";
+          });
       }
 
       //handle searchBy filter for genres
       if (filterSettings.searchBy === "bands") {
         //hide all genres if searchBy is "bands"
-        d3.selectAll(".genre-group").attr("opacity", 0);
+        d3.selectAll(".genre-group").attr("opacity", 0).attr("display", "none");
       } else {
         //show all genres if searchBy is "both" or "genres"
-        d3.selectAll(".genre-group").attr("opacity", 1.0);
+        d3.selectAll(".genre-group")
+          .attr("opacity", 1.0)
+          .attr("display", "block");
       }
     };
 

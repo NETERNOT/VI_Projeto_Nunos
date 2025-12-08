@@ -7,6 +7,8 @@ export async function loadCsvData() {
     dynamicTyping: true,
   });
 
+  console.log(data)
+
   data.map((el) => {
     el.style = el.style
       .replace(/^"|"$/g, "")

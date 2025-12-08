@@ -56,10 +56,10 @@ export function handleClick(
           }
         });
 
-
-        bandInfoUpdate(selectedBand);
-        renderAreaGraph(selectedBand, genreData)
-
+        if (bandOrGenre === "band") {
+          bandInfoUpdate(selectedBand);
+        }
+        renderAreaGraph(selectedBand, genreData);
       });
   }
 
@@ -121,9 +121,8 @@ export function handleClick(
 }
 
 export async function bandInfoUpdate(selectedBand) {
-        const infoContainer = document.querySelector("aside>.bandInfo");
-      infoContainer.innerHTML = "";
-
+  const infoContainer = document.querySelector("aside>.bandInfo");
+  infoContainer.innerHTML = "";
 
   const info = await getBandInfo(selectedBand.band_name);
 
@@ -176,7 +175,6 @@ export async function bandInfoUpdate(selectedBand) {
 
   document.body.classList.toggle("aside-open", 1);
 }
-
 
 export function updateFanSpread(fans) {
   let spreadContainer = document.querySelector(".spread-container");

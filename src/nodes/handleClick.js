@@ -219,6 +219,18 @@ export function updateFanSpread(fans) {
     Ukraine: "🇺🇦",
     "Faroe Islands": "🇫🇴",
   };
+if(list.length > 1){
+  let totalDiv = document.createElement("div");
+  totalDiv.classList.add("country-div");
+
+    let bar = document.createElement("span");
+    bar.style.width = `30%`;
+    bar.classList.add("bar");
+    bar.textContent = `Total Fans: ${fans.total}K`
+
+  totalDiv.appendChild(bar);
+  spreadContainer.appendChild(totalDiv);
+}
 
   for (let entry of list) {
     let countryDiv = document.createElement("div");
@@ -227,6 +239,8 @@ export function updateFanSpread(fans) {
     let bar = document.createElement("span");
     bar.style.width = `${(entry.fans / fans.total) * 30}%`;
     bar.classList.add("bar");
+
+    if(list.length === 1)    bar.textContent = `Total Fans: ${fans.total}K`
 
     let label = document.createElement("span");
     label.textContent = `${countryToFlag[entry.country] || entry.country}`;

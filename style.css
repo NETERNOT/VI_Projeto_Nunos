@@ -391,17 +391,28 @@ canvas {
   width: 100%;
   pointer-events: none;
 
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
   & .country-div {
     width: 100%;
     display: flex;
     gap: 0.5rem;
     align-items: center;
+
+    &>:last-child{
+      line-height: 1rem;
+    }
   }
 
   & .bar {
     display: inline-block;
     height: 1rem;
     background-color: #ddd;
+    line-height: 1rem;
+    font-size: .7rem;
+    text-align: center;
   }
 }
 
@@ -415,3 +426,5 @@ canvas {
 #arealabel {
   z-index: 10001;
 }
+
+

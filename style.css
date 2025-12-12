@@ -299,6 +299,8 @@ canvas {
   color: #fff;
   transition: all 0.5s ease;
 
+  z-index: 10000;
+
   & #right-arrow {
     position: sticky;
     top: 2rem;
@@ -384,17 +386,17 @@ canvas {
   }
 }
 
-body.active{
-  & #bandInfoAside{
+body.active {
+  & #bandInfoAside {
     left: 60%;
   }
 
-  & #control-panel{
+  & #control-panel {
     left: 30%;
   }
 
-  & #about-button{
-    left: 15%;
+  & #about-button {
+    left: 11%;
   }
 }
 
@@ -407,7 +409,7 @@ body.active{
 
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
 
   & .country-div {
     width: 100%;
@@ -415,7 +417,7 @@ body.active{
     gap: 0.5rem;
     align-items: center;
 
-    &>:last-child{
+    & > :last-child {
       line-height: 1rem;
     }
   }
@@ -425,7 +427,7 @@ body.active{
     height: 1rem;
     background-color: #ddd;
     line-height: 1rem;
-    font-size: .7rem;
+    font-size: 0.7rem;
     text-align: center;
   }
 }
@@ -440,5 +442,3 @@ body.active{
 #arealabel {
   z-index: 10001;
 }
-
-

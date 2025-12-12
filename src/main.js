@@ -9,6 +9,7 @@ document.getElementById("back-arrow").addEventListener("click", () => {
 
 document.getElementById("about-button").addEventListener("click", () => {
   const projectAside = document.getElementById("projectInfoAside");
+  document.body.classList.remove("active");
   projectAside.classList.add("active");
 });
 

@@ -425,6 +425,7 @@ body.active {
   & .bar {
     display: inline-block;
     height: 1rem;
+    font-family: "PP Fraktion Sans", sans-serif;
     background-color: #ddd;
     line-height: 1rem;
     font-size: 0.7rem;

@@ -384,6 +384,20 @@ canvas {
   }
 }
 
+body.active{
+  & #bandInfoAside{
+    left: 60%;
+  }
+
+  & #control-panel{
+    left: 30%;
+  }
+
+  & #about-button{
+    left: 15%;
+  }
+}
+
 .spread-container {
   position: absolute;
   top: 1rem;

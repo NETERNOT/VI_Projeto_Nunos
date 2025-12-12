@@ -69,8 +69,7 @@ export function handleClick(
       .filter((d) => d.id === genre.id)
       .on("click", function () {
         //hide aside
-        const bandAside = document.getElementById("bandInfoAside");
-        bandAside.classList.remove("active");
+        document.body.classList.remove("active");
 
         //console.log("Genre clickes countries: ", genre.fans.countries);
         updateFanSpread(genre.fans);
@@ -180,8 +179,7 @@ export async function bandInfoUpdate(selectedBand) {
   infoContainer.appendChild(genres);
   infoContainer.appendChild(bio);
 
-  const bandAside = document.getElementById("bandInfoAside");
-  bandAside.classList.add("active");
+  document.body.classList.add("active");
 }
 
 export function updateFanSpread(fans) {

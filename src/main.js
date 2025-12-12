@@ -4,8 +4,7 @@ import { GenreView } from "./views/genre_view.js";
 import { rawDataPromise, genresListPromise } from "./data/index.js";
 
 document.getElementById("back-arrow").addEventListener("click", () => {
-  const bandAside = document.getElementById("bandInfoAside");
-  bandAside.classList.remove("active");
+  document.body.classList.remove("active");
 });
 
 document.getElementById("about-button").addEventListener("click", () => {

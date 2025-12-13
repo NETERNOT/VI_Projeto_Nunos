@@ -315,13 +315,13 @@ canvas {
     width: 100%;
     margin-top: 4rem;
 
-    & > h3 {
+    &>h3 {
       padding: 0 1rem;
       font-size: 1.4rem;
       font-family: "BIZ UDMincho", serif;
     }
 
-    & > p {
+    &>p {
       padding: 0 1rem;
       font-family: "PP Fraktion Sans", sans-serif;
     }
@@ -359,8 +359,8 @@ canvas {
   & .bandInfo {
     width: 100%;
 
-    & > h2,
-    & > p {
+    &>h2,
+    &>p {
       padding: 0 1rem;
     }
   }
@@ -409,27 +409,31 @@ body.active {
 
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0rem;
 
   & .country-div {
     width: 100%;
     display: flex;
-    gap: 0.5rem;
     align-items: center;
 
-    & > :last-child {
+    &> :last-child {
       line-height: 1rem;
+    }
+
+    &:first-of-type .bar {
+      height: 1.5rem;
     }
   }
 
+
   & .bar {
-    display: inline-block;
+    color: #ddd;
+    font-size: 1.2rem;
+    line-height: 1rem;
+    font-weight: bold;
     height: 1rem;
     font-family: "PP Fraktion Sans", sans-serif;
-    background-color: #ddd;
-    line-height: 1rem;
-    font-size: 0.7rem;
-    text-align: center;
+
   }
 }
 

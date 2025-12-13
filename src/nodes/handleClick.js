@@ -72,7 +72,10 @@ export function handleClick(
         document.body.classList.remove("active");
 
         //console.log("Genre clickes countries: ", genre.fans.countries);
-        updateFanSpread(genre.fans);
+        updateFanSpread(
+          genre.id,
+          bandNodes.filter((b) => b.style.includes(genre.id))
+        );
 
         let bandOrGenre = "genre";
         console.log(bandOrGenre);
@@ -182,13 +185,11 @@ export async function bandInfoUpdate(selectedBand) {
   document.body.classList.add("active");
 }
 
-export function updateFanSpread(fans) {
+export function updateFanSpread(genre, bands) {
   let spreadContainer = document.querySelector(".spread-container");
   spreadContainer.innerHTML = "";
 
   spreadContainer.classList.toggle("active", 1);
-
-  const list = fans.countries.sort((a, b) => b.fans - a.fans);
 
   const countryToFlag = {
     USA: "🇺🇸",
@@ -216,35 +217,44 @@ export function updateFanSpread(fans) {
     Russia: "🇷🇺",
     Ukraine: "🇺🇦",
     "Faroe Islands": "🇫🇴",
+    Spain: "🇪🇸",
   };
-if(list.length > 1){
-  let totalDiv = document.createElement("div");
-  totalDiv.classList.add("country-div");
 
-    let bar = document.createElement("span");
-    bar.style.width = `30%`;
-    bar.classList.add("bar");
-    bar.textContent = `Total Fans: ${fans.total}K`
-
-  totalDiv.appendChild(bar);
-  spreadContainer.appendChild(totalDiv);
-}
-
-  for (let entry of list) {
-    let countryDiv = document.createElement("div");
+  const countryDiv = document.createElement("div");
     countryDiv.classList.add("country-div");
 
-    let bar = document.createElement("span");
-    bar.style.width = `${(entry.fans / fans.total) * 30}%`;
+    const bar = document.createElement("span");
     bar.classList.add("bar");
-
-    if(list.length === 1)    bar.textContent = `Total Fans: ${fans.total}K`
-
-    let label = document.createElement("span");
-    label.textContent = `${countryToFlag[entry.country] || entry.country}`;
+    bar.textContent = `${genre} bands' origins:`;
 
     countryDiv.appendChild(bar);
-    countryDiv.appendChild(label);
+    spreadContainer.appendChild(countryDiv);
+
+  const origins = bands.reduce((acc, band) => {
+    const country = band.origin;
+    const flag = `${countryToFlag[country]} ` || "🏳️";
+
+    if (!acc[country]) {
+      acc[country] = "";
+    }
+
+    acc[country] += `${flag} `;
+    return acc;
+  }, {});
+
+  const sortedOrigins = Object.entries(origins).sort(
+    (a, b) => b[1].length - a[1].length
+  );
+
+  for (const [country, flags] of sortedOrigins) {
+    const countryDiv = document.createElement("div");
+    countryDiv.classList.add("country-div");
+
+    const bar = document.createElement("span");
+    bar.classList.add("bar");
+    bar.textContent = flags;
+
+    countryDiv.appendChild(bar);
     spreadContainer.appendChild(countryDiv);
   }
 }
